@@ -27,7 +27,7 @@
 #include "activehalt.h"
 #include "timer.h"
     
-extern INT8U  Function;
+extern INT8U  State;
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -187,14 +187,11 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
     if(READ_Level())
     {
       // 气体阀打开
-      RTC_WakeUpCmd(DISABLE);
-      Function = 1;
-      RTC_ClearITPendingBit(RTC_IT_WUT); 
-      RTC_WakeUpCmd(ENABLE);
+      State = 1;
     }
-    else Function = 0;
+    else State = 0;
   }
-  else Function = 0;
+  else State = 0;
     /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */

@@ -6,7 +6,7 @@
 #include "usart.h"
 
 
-void CLK_Config(void);
+void CLK_Config(char SYSCLKSource);
 void RTC_Config(void);
 
 #endif 

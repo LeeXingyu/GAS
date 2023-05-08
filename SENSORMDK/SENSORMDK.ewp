@@ -1653,7 +1653,10 @@
             <name>$PROJ_DIR$\..\Components\HX712\HX712.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Components\mytypedef.h</name>
+            <name>$PROJ_DIR$\..\Components\MyTypeDef.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\program.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Components\RFM64\Rfm64.c</name>

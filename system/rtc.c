@@ -7,15 +7,15 @@
 ****函数备注：时钟配置函数函数
 ****版权信息：蓝旗嵌入式系统
 *******************************************************************************/
-void CLK_Config(void)
+void CLK_Config(char SYSCLKSource)
 {
 
     CLK_DeInit();
     CLK_HSICmd(ENABLE);//开始内部高频RC 16M
     CLK_SYSCLKSourceSwitchCmd(ENABLE);//使能时钟切换
     CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);//1分频，即8M
-    CLK_SYSCLKSourceConfig(CLK_SYSCLKSource_HSI);//HSI为系统时钟
-  while (CLK_GetSYSCLKSource() != CLK_SYSCLKSource_HSI)//等待时钟稳定
+    CLK_SYSCLKSourceConfig(SYSCLKSource);//HSI为系统时钟
+  while (CLK_GetSYSCLKSource() != SYSCLKSource)//等待时钟稳定
   {}
 
   /*
@@ -58,7 +58,7 @@ void RTC_Config(void)
         RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);//38K/16/2=2375HZ t=0.842Ms
         delay_ms(500);//延时
     
-        RTC_ITConfig(RTC_IT_WUT, DISABLE);//唤醒定时器中断使能      
+        RTC_ITConfig(RTC_IT_WUT, ENABLE);//唤醒定时器中断使能      
         RTC_SetWakeUpCounter(11876);//设置唤醒时间10s 11876*(1/(38K/16/2)
         RTC_WakeUpCmd(ENABLE);//RTC唤醒使能
         

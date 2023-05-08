@@ -1,7 +1,7 @@
 #include "HX712.h"
                                                 
 static int TimeOut = 20000; //20ms
-static bool Time_flag = BOOL_TRUE;
+bool Time_flag = FALSE;
 /*********************************************************************************/
 /*
 º¯ÊýÃû£ºiic_init
@@ -33,10 +33,10 @@ static unsigned long ReadCount(void)
     if(!TimeOut) 
     {
       USART_SendStr("ReadCount timeout\n");
-      Time_flag = BOOL_FALSE;
+      Time_flag = FALSE;
       return (Count);
     }
-    else Time_flag = BOOL_TRUE;
+    else Time_flag = TRUE;
   }
   
   for (i=0;i<24;i++)
@@ -76,10 +76,10 @@ static unsigned long ReadVoltage(void)
     if(!TimeOut) 
     {
       USART_SendStr("ReadVoltage timeout\n");
-      Time_flag = BOOL_FALSE;
+      Time_flag = FALSE;
       return (CountVol);
     }
-    else Time_flag = BOOL_TRUE;
+    else Time_flag = TRUE;
   }
   
   for (i=0;i<24;i++)
@@ -97,7 +97,7 @@ static unsigned long ReadVoltage(void)
   return(CountVol);
 }
 
-INT8U Read_Init_Mode(INT8U Mode)
+void Read_Init_Mode(INT8U Mode)
 {
   unsigned char i;
   
@@ -111,9 +111,9 @@ INT8U Read_Init_Mode(INT8U Mode)
     if(!TimeOut) 
     {
       USART_SendStr("Read_Init_Mode timeout\n");
-      Time_flag = BOOL_FALSE;
+      Time_flag = FALSE;
     }
-    else Time_flag = BOOL_TRUE;
+    else Time_flag = TRUE;
   }
   
   for (i=0;i<Mode;i++)
@@ -132,13 +132,15 @@ void tx_ReadCount(void)
   unsigned long  Count;
     
     Count = ReadCount();
-    if(Time_flag == BOOL_TRUE)
+    if(Time_flag == TRUE)
     {
       data.tx_data[0] = 0x43;
       data.tx_data[1] = 0x01;	   
       data.tx_data[2] = 0x01;
       data.tx_data[3] = 0x03;
       data.tx_data[4] = (INT8U)&Count;   
+      delay_ms(10);
+      SX1212_SendPacket_Var(data.tx_data,5);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (data.tx_data,5);
 }
 
@@ -147,16 +149,17 @@ void tx_ReadVoltage(void)
   unsigned long  CountVol;
     
     CountVol = ReadVoltage();
-    if(Time_flag == BOOL_TRUE)
+    if(Time_flag == TRUE)
     {
 
       data.tx_data[0] = 0x43;
       data.tx_data[1] = 0x01;	   
       data.tx_data[2] = 0x01;
       data.tx_data[3] = 0x03;
-      data.tx_data[4] = (INT8U)&CountVol;   
-    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (data.tx_data,5);
+      data.tx_data[4] = (INT8U)&CountVol;
+      delay_ms(10);
+      SX1212_SendPacket_Var(data.tx_data,5);
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                (data.tx_data,5);
 }
 
 

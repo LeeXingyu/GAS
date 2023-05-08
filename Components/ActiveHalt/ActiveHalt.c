@@ -1,39 +1,46 @@
 #include "activehalt.h"
 
 /*********************************************************
-函数功能：关闭串口，SPI，DMA时钟
+函数功能：关闭串口，SPI，DMA时钟,定时器3时钟
 函数名称：Active_Halt_Colse
 **********************************************************/
 void Active_Halt_Colse(void)
 {
   
-//   USART_DeInit(USART1); //重新将USART1设置为缺省值的USART1
-//   CLK_PeripheralClockConfig (CLK_Peripheral_USART1,DISABLE);//关闭USART时钟 
-   
-//   DMA_DeInit(DMA1_Channel2);  //将DMA的通道1寄存器重设为缺省值
-//   CLK_PeripheralClockConfig(CLK_Peripheral_DMA1, DISABLE);    //关闭时钟，很重要   
-   
-   SPI_DeInit(SPI1);
-   CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,DISABLE);//关闭SPI时钟
-   
-  ADC_DeInit(ADC1);//内部基准电压使能
+  USART_DeInit(USART1); //重新将USART1设置为缺省值的USART1
+  CLK_PeripheralClockConfig (CLK_Peripheral_USART1,DISABLE);//关闭USART时钟 
+
+  //   DMA_DeInit(DMA1_Channel2);  //将DMA的通道1寄存器重设为缺省值
+  //   CLK_PeripheralClockConfig(CLK_Peripheral_DMA1, DISABLE);    //关闭时钟，很重要   
+
+  SPI_DeInit(SPI1);
+  CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,DISABLE);//关闭SPI时钟
+
+  ADC_DeInit(ADC1);//
   CLK_PeripheralClockConfig (CLK_Peripheral_ADC1,DISABLE);//开启ADC时钟
-    
-   
+
+  TIM3_DeInit(); 
+  CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE); 
+
    
 }
 /*********************************************************
-函数功能：打开串口，SPI，DMA时钟
+函数功能：打开串口，SPI，ADC
 函数名称：Active_Halt_Open
 **********************************************************/
 void Active_Halt_Open(void)
 { 
-//   CLK_PeripheralClockConfig (CLK_Peripheral_USART1,DISABLE);//关闭USART时钟   
-//   USART_DeInit(USART1); //重新将USART1设置为缺省值的USART1
+   CLK_PeripheralClockConfig (CLK_Peripheral_USART1,DISABLE);//关闭USART时钟   
+   USART_DeInit(USART1); //重新将USART1设置为缺省值的USART1
 
    CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,DISABLE);//关闭SPI时钟
    SPI_DeInit(SPI1);
-      
+   
+   CLK_PeripheralClockConfig (CLK_Peripheral_ADC1,DISABLE);//开启ADC时钟
+   ADC_DeInit(ADC1);//  
+   
+   CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
+   TIM3_DeInit(); 
 //   CLK_PeripheralClockConfig(CLK_Peripheral_DMA1, DISABLE);    //关闭时钟，很重要  
 //   DMA_DeInit(DMA1_Channel2);  //将DMA的通道1寄存器重设为缺省值
 }
@@ -60,7 +67,7 @@ void LED_Run(void)
   //ReadVoltageValue();
 }
 
-//使用内部基准电压测量实际电压值
+
 void Air_detection_Init(void)
 {
    
@@ -76,7 +83,7 @@ void Air_detection_Init(void)
        ADC_SoftwareStartConv(ADC1);
 }
 
-INT8U Air_detection(void)//读取电源电压
+INT8U Air_detection(void)//读取是否有气体
 {
     u16 u16_adc1_value = 0;  
     //float VoltageValue = 0;
@@ -96,20 +103,7 @@ INT8U Air_detection(void)//读取电源电压
     {
      return 0;
     }
-    else return 1;
-
-       /*
-       VoltageValue=(3300* (u16_adc1_value))/4096;//获得VDD电压  MV
- //      USART_SendData8(USART1,VoltageValue);
-       
-       	data.tx_data[0] = 0x43;
-	data.tx_data[1] = 0x01;	   
-	data.tx_data[2] = 0x01;
-	data.tx_data[3] = 0x03;
-        data.tx_data[4] = (INT8U) &VoltageValue;
-        SX1212_SendPacket_Var(data.tx_data,5);
-*/
-       
+    else return 1;       
 }
 
 /*--------------------------------------------------------------------------------------------------------

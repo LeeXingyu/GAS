@@ -9,7 +9,7 @@
 #include "sprintf.h"
 #include "mytypedef.h"
 #include "data.h"
-
+#include "SX1212.h"
 /*************************************
 *¶¨ÒåÒý½Å//PD2--CLK
 *          PD3--DOUT
@@ -33,8 +33,9 @@
 void HX712_GPIO_INIT (void);
 void tx_ReadCount(void);
 void tx_ReadVoltage(void);
-INT8U Read_Init_Mode(INT8U Mode);
+void Read_Init_Mode(INT8U Mode);
 #endif
+
 
 
 
