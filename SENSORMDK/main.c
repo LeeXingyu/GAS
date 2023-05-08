@@ -22,11 +22,11 @@ int main(void)
 {
       disableInterrupts();
       PWR_FastWakeUpCmd(ENABLE);  //快速唤醒使能	
-      //RTC_Config();//进入halt后利用rtc打断 启动低功耗      
       GPIO_Init_Colse();  //关闭GPIO
       
       /*测试打开以下两个函数*/
-      CLK_Config(CLK_SYSCLKSource_LSI);//初始化系统时钟         
+      //只使用了内部晶振
+      CLK_Config(CLK_SYSCLKSource_LSI);//初始化系统时钟 LSI      
       HardWare_Init(); 
       
       Active_Halt_Colse();
@@ -45,8 +45,8 @@ int main(void)
         else
         {
           PWR_UltraLowPowerCmd(ENABLE);//超低功耗
-          LowPowerConsumption_Cmd();
-          Active_Halt_Open();
+          LowPowerStart();
+          LowPowerStop();
         }
       }
 }

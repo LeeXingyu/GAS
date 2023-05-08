@@ -18,7 +18,7 @@
             <file>$PROJ_DIR$\..\CMSIS\stm8l15x_it.c</file>
             <file>$PROJ_DIR$\..\CMSIS\stm8l15x_it.h</file>
             <file>$PROJ_DIR$\..\Components\HX712\HX712.c</file>
-            <file>$PROJ_DIR$\..\Components\mytypedef.h</file>
+            <file>$PROJ_DIR$\..\Components\MyTypeDef.h</file>
             <file>$PROJ_DIR$\..\Components\RFM64\Rfm64.c</file>
             <file>$PROJ_DIR$\..\STM8L15x_StdPeriph_Driver\src\stm8l15x_spi.c</file>
             <file>$PROJ_DIR$\..\Components\USART\USART.c</file>
@@ -743,10 +743,6 @@
                     <name>ICCSTM8</name>
                     <file> 155 9 6 106 143 42 97 46 124 116 77 40 68 98 140 107 153 37 148 78 101 138 152 144 99 65 95 135 130 82 111 154 136 11 109 121 129 113 150 84 34 57 89 64 87 117 115 62 67 71 70 13 103 61 44 43 139 137 104 8 88 112</file>
                 </tool>
-                <tool>
-                    <name>BICOMP</name>
-                    <file> 99 8 124 143 121 153 9 109 150 104 106 68 101 130 46 115 84 13 6 71 137 136 97 77 140 148 152 95 111 70 61 44 113 11 129 139 88 112 42 116 40 98 107 37 78 138 144 65 135 82 154 117 64 87 103 155 62 34 57 89 67 43</file>
-                </tool>
             </inputs>
         </file>
         <file>
@@ -875,7 +871,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 138 88 42 143 11 98 82 9 109 150 129 112 6 116 37 65 46 115 84 13 139 40 107 78 144 135 154 70 61 44 113 71 121 104 137 8 136 106 97 124 77 68 140 153 148 101 152 99 95 130 111 117 64 87 103 155 62 34 57 89 67 43</file>
+                    <file> 101 104 106 143 9 68 130 109 150 121 8 124 153 99 46 115 84 13 6 71 137 136 97 77 140 148 152 95 111 70 61 44 113 11 129 139 88 112 42 116 40 98 107 37 78 138 144 65 135 82 154 117 64 87 103 155 62 34 57 89 67 43</file>
                 </tool>
             </inputs>
         </file>

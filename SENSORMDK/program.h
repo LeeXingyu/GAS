@@ -21,7 +21,9 @@
 #include "data.h"
 
 void HardWare_Init(void); 
-void LowPowerConsumption_Cmd(void);
+void LowPowerStart(void);
+void LowPowerStop(void);
 void StandyFun(void);
+void Gas_CheckFun(void);
 
 #endif

@@ -32,8 +32,8 @@ void SX1212_SEND(void)
         tx_ReadCount();
 }
 
-//低功耗情况下,关闭hx711,设置sleep模式
-void LowPowerConsumption_Cmd(void)
+//低功耗情况下,关闭hx712
+void LowPowerStart(void)
 {    
     HX712_CLK_H();
     delay_ms(1);    
@@ -42,10 +42,20 @@ void LowPowerConsumption_Cmd(void)
     Check_flag = 0;
 
     halt(); 
+}
+//退出低功耗
+void LowPowerStop(void)
+{
     //改变系统时钟频率
     CLK_Config(CLK_SYSCLKSource_HSI);
+    //开启时钟
+    Active_Halt_Open();
+    delay_ms(10);
+    SX1212_SetMode( MODE_SLEEP );
+    HX712_CLK_H();
 }
-//待机模式下 固定功能检测
+
+//待机模式下 电量与通讯接收
 void StandyFun(void)
 {
   if(Check_flag)    
@@ -63,7 +73,7 @@ void StandyFun(void)
     recv_sx1212_data();
   }
 }
-
+//气体检测设定
 void Gas_CheckFun(void)
 {
     if(!Gas_check_Times)
@@ -83,6 +93,5 @@ void Gas_CheckFun(void)
     } 
     
   SX1212_SetMode( MODE_SLEEP );
-  HX712_CLK_H();
-  
+  HX712_CLK_H(); 
 }
