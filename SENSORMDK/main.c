@@ -14,7 +14,7 @@
 #include "MyTypeDef.h"
 #include "data.h"
 #include "timer.h"
-#include "Rfm64.h"
+//#include "Rfm64.h"
 #include "data.h"
 
 /*============================================================================
@@ -81,7 +81,7 @@ void HardWare_Init(void)
       SPI_Initial();
       GPIO_Initial();//spi_gpio_init
   
-      VoltageValueinit();//ADC初始化        
+      Air_detection_Init();//ADC初始化        
 	//复位CSx1212 
       SX1212_Init( );
       SX1212_EnterReceiveMode(  );//接收使能
@@ -93,7 +93,7 @@ void SX1212_SEND(void)
 {
         HardWare_Init();//系统初始化
         TEV_STATUS();//检测气压       
-        ReadVoltageValue();//读取电源电压          
+        //ReadVoltageValue();//读取电源电压          
         tx_ReadCount();
 }
 
@@ -107,6 +107,10 @@ void LowPowerConsumption_Cmd(void)
     //关闭RTC唤醒   利用外部中断唤醒
     RTC_ITConfig(RTC_IT_WUT, DISABLE);
     RTC_WakeUpCmd(DISABLE); 
+    
+    //状态位初始化
+    Gas_check_Times = 1;
+    Check_flag = 0;
 
     halt();   
 
@@ -131,7 +135,7 @@ void StandyFun_Cmd(void)
     if(!Gas_check_Times)
     {
       //检测是否有气压
-      if(AIN_Level())
+      if(Air_detection())
       {
         //有气压 10s检测一次 并上传
         Gas_check_Times = 1;

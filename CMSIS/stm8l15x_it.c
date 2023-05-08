@@ -186,6 +186,7 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
     delay_ms(10);
     if(READ_Level())
     {
+      // 气体阀打开
       RTC_WakeUpCmd(DISABLE);
       Function = 1;
       RTC_ClearITPendingBit(RTC_IT_WUT); 

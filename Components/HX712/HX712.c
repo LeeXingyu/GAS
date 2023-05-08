@@ -104,7 +104,7 @@ void tx_ReadCount(void)
     data.tx_data[1] = 0x01;	   
     data.tx_data[2] = 0x01;
     data.tx_data[3] = 0x03;
-    data.tx_data[4] = (INT8U) & Count;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (data.tx_data,5);
+    data.tx_data[4] = (INT8U)&Count;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (data.tx_data,5);
 }
 
 void tx_ReadVoltage(void)
@@ -117,7 +117,7 @@ void tx_ReadVoltage(void)
     data.tx_data[1] = 0x01;	   
     data.tx_data[2] = 0x01;
     data.tx_data[3] = 0x03;
-    data.tx_data[4] = (INT8U) & CountVol;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (data.tx_data,5);
+    data.tx_data[4] = (INT8U)&CountVol;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        (data.tx_data,5);
 }
 
 

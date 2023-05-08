@@ -15,8 +15,8 @@ extern void GPIO_Init_Colse(void);
 
 
 void LED_Run(void);
-void VoltageValueinit(void);
-void ReadVoltageValue(void);//读取电源电压
+void Air_detection_Init(void);
+INT8U Air_detection(void);//读取电源电压
 
 #endif 
 

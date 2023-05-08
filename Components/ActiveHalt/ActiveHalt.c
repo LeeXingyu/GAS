@@ -57,11 +57,11 @@ void LED_Run(void)
 {
   delay_ms(1000);
   GPIO_ToggleBits(GPIOD,GPIO_Pin_3);//上电指示运行灯
-  ReadVoltageValue();
+  //ReadVoltageValue();
 }
 
 //使用内部基准电压测量实际电压值
-void VoltageValueinit(void)
+void Air_detection_Init(void)
 {
    
        CLK_PeripheralClockConfig (CLK_Peripheral_ADC1,ENABLE);//开启ADC时钟
@@ -69,24 +69,37 @@ void VoltageValueinit(void)
        ADC_Init (ADC1,ADC_ConversionMode_Single,ADC_Resolution_12Bit,ADC_Prescaler_1);//ADC1，单次采样，12位，1分频
   
        ADC_SamplingTimeConfig(ADC1,ADC_Group_FastChannels,ADC_SamplingTime_384Cycles);//采样周期设置
-       ADC_VrefintCmd(ENABLE);//内部基准电压使能
-       ADC_ChannelCmd (ADC1,ADC_Channel_Vrefint,ENABLE);//使能内部基准电压测量通道
+       
+       ADC_ChannelCmd(ADC1, ADC_Channel_21, ENABLE);
+       //
        ADC_Cmd(ADC1,ENABLE);//ADC1使能 
+       ADC_SoftwareStartConv(ADC1);
 }
-void ReadVoltageValue(void)//读取电源电压
+
+INT8U Air_detection(void)//读取电源电压
 {
     u16 u16_adc1_value = 0;  
     float VoltageValue = 0;
-  
-       ADC_SoftwareStartConv (ADC1);//开启软件转换
-             
-       while(!ADC_GetFlagStatus (ADC1,ADC_FLAG_EOC));//等待转换结束
-       ADC_ClearFlag (ADC1,ADC_FLAG_EOC);//清除相关标识
-       
-       delay_ms(10);
-       u16_adc1_value=ADC_GetConversionValue (ADC1);//获取转换值
-       //VoltageValue=u16_adc1_value*3300UL/4095UL;
-       VoltageValue=(1.225* (u16_adc1_value))/4096;//获得VDD电压
+
+    ADC_SoftwareStartConv (ADC1);//开启软件转换
+         
+    while(!ADC_GetFlagStatus (ADC1,ADC_FLAG_EOC));//等待转换结束
+    ADC_ClearFlag (ADC1,ADC_FLAG_EOC);//清除相关标识
+
+    delay_ms(10);
+    u16_adc1_value=ADC_GetConversionValue (ADC1);//获取转换值
+    //VoltageValue=u16_adc1_value*3300UL/4095UL;
+
+    VoltageValue = (3300* (u16_adc1_value))/4096;//获取实际电压值
+
+    if(u16_adc1_value < 1490)   //小于1490 无气压
+    {
+     return 0;
+    }
+    else return 1;
+
+       /*
+       VoltageValue=(3300* (u16_adc1_value))/4096;//获得VDD电压  MV
  //      USART_SendData8(USART1,VoltageValue);
        
        	data.tx_data[0] = 0x43;
@@ -95,6 +108,7 @@ void ReadVoltageValue(void)//读取电源电压
 	data.tx_data[3] = 0x03;
         data.tx_data[4] = (INT8U) &VoltageValue;
         SX1212_SendPacket_Var(data.tx_data,5);
+*/
        
 }
 

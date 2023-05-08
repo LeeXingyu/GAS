@@ -35,6 +35,8 @@ void TIM3_Handle(void)
   {
     Check_flag = 1;
     Gas_check_Times --;
+    if(Gas_check_Times <= 0)
+      Gas_check_Times = 0;
   }
 }
 
