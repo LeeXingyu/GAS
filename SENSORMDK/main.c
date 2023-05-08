@@ -32,9 +32,10 @@
 ============================================================================*/
 
 INT8U  Check_flag = 0;
-
 INT8U  Function = 0;
 extern INT8U Gas_check_Times;
+
+static INT8U rcv;
 
 void HardWare_Init(void); 
 void LowPowerConsumption_Cmd(void);
@@ -72,8 +73,8 @@ int main(void)
 void HardWare_Init(void)
 {
       //TEST
-//    Usart_Init();//初始化串口  
-//    Usart1_clear_init();//串口BUF初始化  
+      Usart_Init();//初始化串口  
+      Usart1_clear_init();//串口BUF初始化  
       TEV_GPIO_INIT();//初始化电磁阀检测和开关  
       HX712_GPIO_INIT();
      
@@ -82,7 +83,7 @@ void HardWare_Init(void)
       GPIO_Initial();//spi_gpio_init
   
       Air_detection_Init();//ADC初始化        
-	//复位CSx1212 
+      //复位CSx1212 
       SX1212_Init( );
       SX1212_EnterReceiveMode(  );//接收使能
         
@@ -101,6 +102,8 @@ void SX1212_SEND(void)
 void LowPowerConsumption_Cmd(void)
 {
     CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
+    CLK_PeripheralClockConfig(CLK_Peripheral_SPI, DISABLE);
+    CLK_PeripheralClockConfig(CLK_Peripheral_USART, DISABLE);
     SX1212_SetMode( MODE_SLEEP );
     HX712_CLK_H();
     delay_ms(1);
@@ -129,8 +132,9 @@ void StandyFun_Cmd(void)
     
     //待测试  读取电池电压
     tx_ReadVoltage();
+    
     //接受主机发送关闭阀门的指令
-    recv_sx1212_data();
+    rcv = recv_sx1212_data();
     
     if(!Gas_check_Times)
     {
@@ -147,7 +151,6 @@ void StandyFun_Cmd(void)
         Gas_check_Times = 6;       
       }
     } 
-    //ReadVoltageValue();
   }
  
   SX1212_SetMode( MODE_SLEEP );

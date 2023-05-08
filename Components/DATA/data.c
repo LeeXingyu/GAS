@@ -11,10 +11,10 @@ data_buf data;
      
 /* 全局变量定义 */
 
-static int TimeOut = 100;
+static int TimeOut = 20000;
 
 //SX1212接收数据处理
-void recv_sx1212_data(void)
+INT8U recv_sx1212_data(void)
 {
         INT8U txBuffer[5] = {0x43,0x01,0x01,0x04,0x01};
         SX1212_EnterReceiveMode(  );
@@ -22,7 +22,11 @@ void recv_sx1212_data(void)
         {
           TimeOut--;
           delay_us();
-          if(!TimeOut) goto exit;
+          if(!TimeOut) 
+          {
+            USART_SendStr("recv sx1212 timeout\n");
+            return 0;
+          }
         }
         data.rx_len = SX1212_ReceivePacket(data.rx_data);
         if(data.rx_len <= 5)
@@ -33,15 +37,21 @@ void recv_sx1212_data(void)
            {
             QA_PowerH();//关闭电磁阀
             SX1212_SendPacket_Var(txBuffer,5);
+            return 1;
            }
+         }
+         else 
+         {
+           USART_SendStr("recv sx1212 data_head error\n");
+           return 0;
          }
        }
        else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
        {
          data.rx_len = 0;
-       }
-exit:
-      data.rx_len = 0;
+         USART_SendStr("recv sx1212 data error\n");
+         return 0;
+       } 
 }
 
 

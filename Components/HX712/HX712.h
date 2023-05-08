@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "sprintf.h"
-
+#include "mytypedef.h"
 #include "data.h"
 
 /*************************************
@@ -33,9 +33,7 @@
 void HX712_GPIO_INIT (void);
 void tx_ReadCount(void);
 void tx_ReadVoltage(void);
-void Read_Init_Mode(INT8U Mode);
-unsigned long ReadCount(void);
-unsigned long ReadVoltage(void);
+INT8U Read_Init_Mode(INT8U Mode);
 #endif
 
 

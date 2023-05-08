@@ -11,6 +11,7 @@
 #include "ETC.h"
 //#include <stdlib.h>
 #include <stdio.h>
+#include "USART.h"
 
 /* �Զ��峣����ͱ���ʽ�� */
 #define RxBuffer 10
@@ -23,7 +24,7 @@ typedef struct tag_data{
         unsigned char rx_len;
 
 }data_buf;
-void recv_sx1212_data(void);
+INT8U recv_sx1212_data(void);
 extern data_buf data;
 
 

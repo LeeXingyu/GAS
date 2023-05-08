@@ -450,7 +450,7 @@ INTERRUPT_HANDLER(USART1_RX_TIM5_CC_IRQHandler,28)
           MYDMA_Enable(DMA1_Channel2);
 	}
   */
-  unsigned char a;
+    unsigned char a;
     a=(USART_ReceiveData8 (USART1));
     while(USART_GetFlagStatus(USART1,USART_FLAG_TXE)==0);
     USART_SendData8(USART1,a);  

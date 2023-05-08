@@ -58,7 +58,7 @@ void RTC_Config(void)
         RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);//38K/16/2=2375HZ t=0.842Ms
         delay_ms(500);//延时
     
-        RTC_ITConfig(RTC_IT_WUT, ENABLE);//唤醒定时器中断使能      
+        RTC_ITConfig(RTC_IT_WUT, DISABLE);//唤醒定时器中断使能      
         RTC_SetWakeUpCounter(11876);//设置唤醒时间10s 11876*(1/(38K/16/2)
         RTC_WakeUpCmd(ENABLE);//RTC唤醒使能
         

@@ -79,7 +79,7 @@ void Air_detection_Init(void)
 INT8U Air_detection(void)//读取电源电压
 {
     u16 u16_adc1_value = 0;  
-    float VoltageValue = 0;
+    //float VoltageValue = 0;
 
     ADC_SoftwareStartConv (ADC1);//开启软件转换
          
@@ -90,7 +90,7 @@ INT8U Air_detection(void)//读取电源电压
     u16_adc1_value=ADC_GetConversionValue (ADC1);//获取转换值
     //VoltageValue=u16_adc1_value*3300UL/4095UL;
 
-    VoltageValue = (3300* (u16_adc1_value))/4096;//获取实际电压值
+    //VoltageValue = (3300* (u16_adc1_value))/4096;//获取实际电压值
 
     if(u16_adc1_value < 1490)   //小于1490 无气压
     {
