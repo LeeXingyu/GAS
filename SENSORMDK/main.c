@@ -35,14 +35,14 @@ int main(void)
          
       while(1)
       { 
-        if(State)
+/*        if(State)
         {
           CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
           StandyFun();
           Gas_CheckFun();
           CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
         }
-        else
+        else*/
         {
           PWR_UltraLowPowerCmd(ENABLE);//³¬µÍ¹¦ºÄ
           LowPowerStart();
