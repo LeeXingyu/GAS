@@ -28,7 +28,7 @@ int main(void)
       //只使用了内部晶振
       CLK_Config(CLK_SYSCLKSource_LSI);//初始化系统时钟 LSI      
       HardWare_Init(); 
-      
+      //关闭功能的系统时钟
       Active_Halt_Colse();
       enableInterrupts(); //开启总中断  
       

@@ -3,7 +3,7 @@
 INT8U  Check_flag = 0;
 extern INT8U Gas_check_Times;
 
-
+//固件初始化
 void HardWare_Init(void)
 {
       //TEST
@@ -20,7 +20,7 @@ void HardWare_Init(void)
       //复位CSx1212 
       SX1212_Init( );
       SX1212_EnterReceiveMode(  );//接收使能
-      SX1212_SetMode( MODE_SLEEP );
+      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
         
 }
 
@@ -32,7 +32,7 @@ void SX1212_SEND(void)
         tx_ReadCount();
 }
 
-//低功耗情况下,关闭hx712
+//开启低功耗
 void LowPowerStart(void)
 {    
     HX712_CLK_H();
@@ -73,7 +73,7 @@ void StandyFun(void)
     recv_sx1212_data();
   }
 }
-//气体检测设定
+//待机状态下气体检测设定
 void Gas_CheckFun(void)
 {
     if(!Gas_check_Times)
