@@ -2118,6 +2118,9 @@
             <name>$PROJ_DIR$\..\Components\ActiveHalt\ActiveHalt.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Components\ADC\adc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Components\DATA\data.c</name>
         </file>
         <file>

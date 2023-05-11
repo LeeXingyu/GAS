@@ -123,7 +123,7 @@ char *itoa(int value, char *string, int radix);
  *            		 USART1_printf(  "\r\n %s \r\n", j );
  ***************************************************************************/
 void USART_printf( uint8_t *Data,...);
-
+void mprintf(char *Data, ...);
 
 
 #endif 

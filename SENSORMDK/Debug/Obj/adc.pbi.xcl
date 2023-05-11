@@ -1,4 +1,4 @@
-"E:\PROJECT\gas\client_stm8\SENSOR_send\STM8L15x_StdPeriph_Driver\src\stm8l15x_spi.c"
+"E:\PROJECT\gas\client_stm8\SENSOR_send\Components\ADC\adc.c"
 -std=c99
 -ferror-limit=0
 -I

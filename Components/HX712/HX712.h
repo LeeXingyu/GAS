@@ -14,7 +14,8 @@
 *定义引脚//PD2--CLK
 *          PD3--DOUT
 ***************************************/
-
+ 
+#define Bat_threshold  910000    //大于910000 即电压值大于3.3
 
 #define HX712_GPIO_PORT  GPIOD
 #define HX712_CLK_PINS  GPIO_Pin_3

@@ -274,6 +274,7 @@
                     <state>E:\PROJECT\gas\client_stm8\SENSOR_send\Components\USART</state>
                     <state>E:\PROJECT\gas\client_stm8\SENSOR_send\Components\Timer</state>
                     <state>E:\PROJECT\gas\client_stm8\SENSOR_send\Components\RFM64</state>
+                    <state>E:\PROJECT\gas\client_stm8\SENSOR_send\Components\ADC</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1639,6 +1640,9 @@
         <name>Components</name>
         <file>
             <name>$PROJ_DIR$\..\Components\ActiveHalt\ActiveHalt.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\Components\ADC\adc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Components\DATA\data.c</name>

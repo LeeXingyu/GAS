@@ -22,7 +22,6 @@ void Active_Halt_Colse(void)
   TIM3_DeInit(); 
   CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE); 
 
-   
 }
 /*********************************************************
 函数功能：打开串口，SPI，DMA时钟,定时器3时钟
@@ -68,43 +67,6 @@ void LED_Run(void)
 }
 
 
-void Air_detection_Init(void)
-{
-   
-       CLK_PeripheralClockConfig (CLK_Peripheral_ADC1,ENABLE);//开启ADC时钟
-       ADC_DeInit(ADC1);
-       ADC_Init (ADC1,ADC_ConversionMode_Single,ADC_Resolution_12Bit,ADC_Prescaler_1);//ADC1，单次采样，12位，1分频
-  
-       ADC_SamplingTimeConfig(ADC1,ADC_Group_FastChannels,ADC_SamplingTime_384Cycles);//采样周期设置
-       
-       ADC_ChannelCmd(ADC1, ADC_Channel_21, ENABLE);
-       //
-       ADC_Cmd(ADC1,ENABLE);//ADC1使能 
-       ADC_SoftwareStartConv(ADC1);
-}
-
-INT8U Air_detection(void)//读取是否有气体
-{
-    u16 u16_adc1_value = 0;  
-    //float VoltageValue = 0;
-
-    ADC_SoftwareStartConv (ADC1);//开启软件转换
-         
-    while(!ADC_GetFlagStatus (ADC1,ADC_FLAG_EOC));//等待转换结束
-    ADC_ClearFlag (ADC1,ADC_FLAG_EOC);//清除相关标识
-
-    delay_ms(10);
-    u16_adc1_value=ADC_GetConversionValue (ADC1);//获取转换值
-    //VoltageValue=u16_adc1_value*3300UL/4095UL;
-
-    //VoltageValue = (3300* (u16_adc1_value))/4096;//获取实际电压值
-
-    if(u16_adc1_value < 1490)   //小于1490 无气压
-    {
-     return 0;
-    }
-    else return 1;       
-}
 
 /*--------------------------------------------------------------------------------------------------------
                    							                  0ooo

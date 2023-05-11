@@ -1,7 +1,9 @@
 #include "HX712.h"
-                                                
-static int TimeOut = 20000; //20ms
+#include "usart.h"  
+
+//static int TimeOut = 20000; //20ms
 bool Time_flag = FALSE;
+
 /*********************************************************************************/
 /*
 函数名：iic_init
@@ -28,7 +30,7 @@ static unsigned long ReadCount(void)
   //读取气体是否有气压
   while(DOUT_Level())
   {
-    TimeOut--;
+   /* TimeOut--;
     delay_us();
     if(!TimeOut) 
     {
@@ -36,8 +38,9 @@ static unsigned long ReadCount(void)
       Time_flag = FALSE;
       return (Count);
     }
-    else Time_flag = TRUE;
-  }
+    else Time_flag = TRUE;*/
+    
+  };
   
   for (i=0;i<24;i++)
   {
@@ -61,6 +64,8 @@ static unsigned long ReadCount(void)
   return(Count);
 }
 //读取电源电压
+//计算方式：当前电池电量 * 3.2/(56 + 3.2) 是芯片采集到的AD_Value值
+//          CountVol =   AD_Value/(3.3/2)*(long int)(0x7FFFFF) 
 static unsigned long ReadVoltage(void)
 {
   unsigned long CountVol;
@@ -106,15 +111,15 @@ void Read_Init_Mode(INT8U Mode)
   //AD转换是否完成
     while(DOUT_Level())
   {
-    TimeOut--;
+   /* TimeOut--;
     delay_us();
     if(!TimeOut) 
     {
       USART_SendStr("Read_Init_Mode timeout\n");
       Time_flag = FALSE;
     }
-    else Time_flag = TRUE;
-  }
+    else Time_flag = TRUE;*/
+  };
   
   for (i=0;i<Mode;i++)
   {
@@ -146,10 +151,12 @@ void tx_ReadCount(void)
 
 void tx_ReadVoltage(void)
 {
-  unsigned long  CountVol;
-    
+   unsigned long  CountVol;
+   float Bat_Vol;
     CountVol = ReadVoltage();
-    if(Time_flag == TRUE)
+    //小于3.3V的ad值时发送数据
+    //Bat_Vol = (float)(((uint32_t)CountVol)/8388607*(3.3/2)/3.2*(56+3.2));
+    if(CountVol <= Bat_threshold)
     {
 
       data.tx_data[0] = 0x43;
