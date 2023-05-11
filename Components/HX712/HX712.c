@@ -71,7 +71,7 @@ static unsigned long ReadVoltage(void)
   //读取BAT转换数据
   while(DOUT_Level())
   {
-    TimeOut--;
+/*    TimeOut--;
     delay_us();
     if(!TimeOut) 
     {
@@ -79,8 +79,8 @@ static unsigned long ReadVoltage(void)
       Time_flag = FALSE;
       return (CountVol);
     }
-    else Time_flag = TRUE;
-  }
+    else Time_flag = TRUE;*/
+  };
   
   for (i=0;i<24;i++)
   {
@@ -140,7 +140,7 @@ void tx_ReadCount(void)
       data.tx_data[3] = 0x03;
       data.tx_data[4] = (INT8U)&Count;   
       delay_ms(10);
-      SX1212_SendPacket_Var(data.tx_data,5);
+      //SX1212_SendPacket_Var(data.tx_data,5);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (data.tx_data,5);
 }
 
@@ -158,7 +158,7 @@ void tx_ReadVoltage(void)
       data.tx_data[3] = 0x03;
       data.tx_data[4] = (INT8U)&CountVol;
       delay_ms(10);
-      SX1212_SendPacket_Var(data.tx_data,5);
+     // SX1212_SendPacket_Var(data.tx_data,5);
     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                (data.tx_data,5);
 }
 

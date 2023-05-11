@@ -26,8 +26,9 @@
 //#include "DMA.h"
 #include "activehalt.h"
 #include "timer.h"
+#include "ETC.h"
     
-extern INT8U  State;
+INT8U  State = 0;
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -180,7 +181,10 @@ INTERRUPT_HANDLER(EXTI0_IRQHandler,8)
 INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
 {
   //打断halt  根据气体阀是否打开执行不同功能
-  EXTI_ClearITPendingBit(EXTI_IT_Pin1); 
+  
+  //QA_PowerL();
+  //delay_ms(3000);
+ 
   if(READ_Level())
   {
     delay_ms(10);
@@ -192,6 +196,7 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
     else State = 0;
   }
   else State = 0;
+  EXTI_ClearITPendingBit(EXTI_IT_Pin1); 
     /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */

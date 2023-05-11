@@ -23,7 +23,7 @@
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM8L15x_H
  #define __STM8L15x_H
-
+#include <stdbool.h>
 /** @addtogroup STM8L15x_StdPeriph_Driver
   * @{
   */
@@ -208,14 +208,27 @@ typedef uint16_t u16;
 typedef uint8_t  u8;
 
 
-typedef enum {FALSE = 0, TRUE = !FALSE} bool;
+//typedef enum {FALSE = 0, TRUE = !FALSE} bool;
 
-typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus, BitStatus, BitAction;
+//typedef enum {RESET = 0, SET = !RESET} FlagStatus, ITStatus, BitStatus, BitAction;
+#define FlagStatus bool
+#define ITStatus   bool
+#define BitAction  bool
+#define BitStatus  bool
+#define RESET      0
+#define SET        1
 
-typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
+//typedef enum {DISABLE = 0, ENABLE = !DISABLE} FunctionalState;
+#define FunctionalState  bool
+#define DISABLE          0
+#define ENABLE           1
+
 #define IS_FUNCTIONAL_STATE(STATE) (((STATE) == DISABLE) || ((STATE) == ENABLE))
 
-typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
+//typedef enum {ERROR = 0, SUCCESS = !ERROR} ErrorStatus;
+#define ErrorStatus      bool
+#define ERROR            0
+#define SUCCESS          1
 
 #define U8_MAX     (255)
 #define S8_MAX     (127)

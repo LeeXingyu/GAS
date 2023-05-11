@@ -17,6 +17,7 @@ static int TimeOut = 20000;
 INT8U recv_sx1212_data(void)
 {
         INT8U txBuffer[5] = {0x43,0x01,0x01,0x04,0x01};
+        char revalue;
         SX1212_EnterReceiveMode(  );
         while( !SX1212_READ_IRQ_1( ))
         {
@@ -25,7 +26,7 @@ INT8U recv_sx1212_data(void)
           if(!TimeOut) 
           {
             USART_SendStr("recv sx1212 timeout\n");
-            return 0;
+            revalue =  0;
           }
         }
         data.rx_len = SX1212_ReceivePacket(data.rx_data);
@@ -37,21 +38,22 @@ INT8U recv_sx1212_data(void)
            {
             QA_PowerH();//¹Ø±Õµç´Å·§
             SX1212_SendPacket_Var(txBuffer,5);
-            return 1;
+            revalue =  1;
            }
          }
          else 
          {
            USART_SendStr("recv sx1212 data_head error\n");
-           return 0;
+           revalue =  0;
          }
        }
        else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
        {
          data.rx_len = 0;
          USART_SendStr("recv sx1212 data error\n");
-         return 0;
+         revalue =  0;
        } 
+       return revalue;
 }
 
 

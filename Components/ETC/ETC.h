@@ -19,10 +19,10 @@
 
 
 #define QA_PowerH()   GPIO_SetBits(TEV_GPIO_PORT,TEV_CTRL_PINS)// 信号为高电平
+#define QA_PowerL()   GPIO_ResetBits(TEV_GPIO_PORT,TEV_CTRL_PINS)// 信号为高电平
 
-#define READ_Level()  GPIO_ReadInputDataBit(TEV_GPIO_PORT,TEV_READ_PINS)  //读取数据
-
-
+int READ_Level(void);
+void TEV_CTRL_INIT(void);
 void TEV_GPIO_INIT (void);
 void TEV_STATUS(void);
 #endif

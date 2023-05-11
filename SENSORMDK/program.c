@@ -8,19 +8,23 @@ void HardWare_Init(void)
 {
       //TEST
       Usart_Init();//初始化串口  
-      Usart1_clear_init();//串口BUF初始化  
+      Usart1_clear_init();//串口BUF初始化 
+  
       TEV_GPIO_INIT();//初始化电磁阀检测和开关  
+      TEV_CTRL_INIT();
+      
       HX712_GPIO_INIT();//hx712&ADC GPIO_init
      
-      TIM3_Init();
-      SPI_Initial();
-      GPIO_Initial();//SPI_GPIO_INIT
+    //  TIM3_Init();
+   //   SPI_Initial();
+   //   GPIO_Initial();//SPI_GPIO_INIT
   
-      Air_detection_Init();//ADC初始化        
+   //   Air_detection_Init();//ADC初始化        
       //复位CSx1212 
-      SX1212_Init( );
-      SX1212_EnterReceiveMode(  );//接收使能
-      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+   //   SX1212_Init( );
+  //    SX1212_EnterReceiveMode(  );//接收使能
+  //    SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+  //    
         
 }
 
@@ -36,7 +40,8 @@ void SX1212_SEND(void)
 void LowPowerStart(void)
 {    
     HX712_CLK_H();
-    delay_ms(1);    
+    delay_ms(1);  
+    QA_PowerL();
     //状态位初始化
     Gas_check_Times = 1;
     Check_flag = 0;
@@ -46,6 +51,7 @@ void LowPowerStart(void)
 //退出低功耗
 void LowPowerStop(void)
 {
+    QA_PowerH();
     //改变系统时钟频率
     CLK_Config(CLK_SYSCLKSource_HSI);
     //开启时钟
