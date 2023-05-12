@@ -1,6 +1,6 @@
 #include "timer.h"
 
-INT8U Rfm_Times = 20;  //0.5*20 = 10s
+INT8U Rfm_Times = 40;  //0.25*40 = 10s
 INT8U Gas_check_Times = 1;
 extern INT8U  Check_flag;
 /*********************************************************

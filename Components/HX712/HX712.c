@@ -17,7 +17,7 @@ void HX712_GPIO_INIT (void)
 {
    GPIO_Init(HX712_GPIO_PORT, HX712_CLK_PINS, GPIO_Mode_Out_PP_Low_Slow);//带上拉，推挽输出低电平
    GPIO_Init(HX712_GPIO_PORT, HX712_DOUT_PINS, GPIO_Mode_In_FL_No_IT);//带上拉，推挽输出低电平
-   GPIO_Init(HX712_GPIO_PORT, HX712_AIN_PINS, GPIO_Mode_In_FL_No_IT);//带上拉，推挽输出低电平
+   
 }
 //读取气压
 static unsigned long ReadCount(void)

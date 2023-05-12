@@ -36,7 +36,7 @@ void Usart_Init(void)
     USART_DeInit(USART1); // 重新将USART1设置为缺省值的USART1
 
     GPIO_Init(USART_GPIO_PORT, TXD_GPIO_PINS, GPIO_Mode_Out_PP_High_Fast); // 初始化，推挽输出，快速
-    GPIO_Init(USART_GPIO_PORT, RXD_GPIO_PINS, GPIO_Mode_In_PU_No_IT);      // 初始化，带上拉输入，不带中断
+   GPIO_Init(USART_GPIO_PORT, RXD_GPIO_PINS, GPIO_Mode_In_PU_No_IT);      // 初始化，带上拉输入，不带中断
     //       GPIO_Init(USART_GPIO_PORT, CS_GPIO_PINS, GPIO_Mode_Out_PP_High_Slow);
 
     /*

@@ -6,7 +6,7 @@ extern INT8U  Function;
 //初始化电磁阀检测和开关                                         
 void TEV_GPIO_INIT (void)
 {
-   GPIO_DeInit(GPIOB);
+   //GPIO_DeInit(GPIOB);
    disableInterrupts(); 
    GPIO_Init(TEV_GPIO_PORT, TEV_READ_PINS, GPIO_Mode_In_FL_No_IT);//带上拉，推挽输出低电平
    

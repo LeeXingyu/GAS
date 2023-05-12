@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <settings>
+    <DebugChecksum>
+        <Checksum>774377239</Checksum>
+    </DebugChecksum>
     <Stack>
         <FillEnabled>0</FillEnabled>
         <OverflowWarningsEnabled>1</OverflowWarningsEnabled>
@@ -11,56 +14,9 @@
         <LimitSize>0</LimitSize>
         <ByteLimit>50</ByteLimit>
     </Stack>
-    <InterruptLog>
-        <LogEnabled>0</LogEnabled>
-        <SumEnabled>0</SumEnabled>
-        <GraphEnabled>0</GraphEnabled>
-        <ShowTimeLog>1</ShowTimeLog>
-        <ShowTimeSum>1</ShowTimeSum>
-        <SumSortOrder>0</SumSortOrder>
-    </InterruptLog>
-    <DataLog>
-        <LogEnabled>0</LogEnabled>
-        <SumEnabled>0</SumEnabled>
-        <GraphEnabled>0</GraphEnabled>
-        <ShowTimeLog>1</ShowTimeLog>
-        <ShowTimeSum>1</ShowTimeSum>
-    </DataLog>
-    <Breakpoints2>
-        <Count>0</Count>
-    </Breakpoints2>
-    <Interrupts>
-        <Enabled>1</Enabled>
-    </Interrupts>
-    <MemoryMap>
-        <Enabled>0</Enabled>
-        <Base>0</Base>
-        <UseAuto>0</UseAuto>
-        <TypeViolation>1</TypeViolation>
-        <UnspecRange>1</UnspecRange>
-        <ActionState>1</ActionState>
-    </MemoryMap>
-    <Trace1>
-        <Enabled>0</Enabled>
-        <ShowSource>1</ShowSource>
-    </Trace1>
-    <Simulator>
-        <Freq>16000000</Freq>
-    </Simulator>
-    <DebugChecksum>
-        <Checksum>1044471224</Checksum>
-    </DebugChecksum>
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
-    <Disassembly>
-        <MixedMode>1</MixedMode>
-    </Disassembly>
-    <Log_file>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-        <Category>_ 0</Category>
-    </Log_file>
     <DataSample>
         <LogEnabled>0</LogEnabled>
         <GraphEnabled>0</GraphEnabled>
@@ -76,19 +32,18 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\Components\Tem_Hum\TemHum.c}.15.3" 0 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\Components\IWDG\IWDG.c}.65.8" 0 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\Components\ADC\adc.c}.67.2" 1 0 0 0 "" 0 ""</Bp2>
-        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\..\Components\HX712\HX712.c}.159.5" 1 0 0 0 "" 0 ""</Bp3>
-        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\..\CMSIS\stm8l15x_it.c}.188.6" 1 0 0 0 "" 0 ""</Bp4>
-        <Count>5</Count>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\Components\ADC\adc.c}.66.2" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\program.c}.77.6" 1 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\program.c}.105.9" 1 0 0 0 "" 0 ""</Bp2>
+        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\program.c}.119.9" 1 0 0 0 "" 0 ""</Bp3>
+        <Count>4</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>
     </Aliases>
     <DebuggerSettings>
-        <DisableInterruptsWhenStepping>1</DisableInterruptsWhenStepping>
+        <DisableInterruptsWhenStepping>0</DisableInterruptsWhenStepping>
         <LeaveTargetRunning>0</LeaveTargetRunning>
     </DebuggerSettings>
 </settings>
