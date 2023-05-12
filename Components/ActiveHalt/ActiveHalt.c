@@ -51,10 +51,12 @@ void Active_Halt_Open(void)
 void GPIO_Init_Colse(void)
 {
      //PC0和PC1接的是高电平，即PC_ALL高
-      GPIO_Init(GPIOC, GPIO_Pin_All, GPIO_Mode_In_PU_No_IT);//拉高GPIOC  
-      GPIO_Init(GPIOB, GPIO_Pin_All, GPIO_Mode_In_PU_No_IT);//拉高GPIOC  
-      GPIO_Init(GPIOA, GPIO_Pin_All, GPIO_Mode_In_PU_No_IT);//拉高GPIOC  
-      GPIO_Init(GPIOD, GPIO_Pin_All, GPIO_Mode_In_PU_No_IT);//拉高GPIOC  
+      GPIO_Init(GPIOC, GPIO_Pin_All, GPIO_Mode_Out_PP_Low_Fast);//拉高GPIOC  
+      GPIO_Init(GPIOB, GPIO_Pin_All, GPIO_Mode_Out_PP_Low_Fast);//拉高GPIOC  
+      GPIO_Init(GPIOA, GPIO_Pin_All, GPIO_Mode_In_FL_No_IT);//拉高GPIOC  
+      GPIO_Init(GPIOD, GPIO_Pin_All, GPIO_Mode_Out_PP_Low_Fast);//拉高GPIOC  
+      
+      GPIO_SetBits(GPIOD,GPIO_Pin_3);
 
 }
 
