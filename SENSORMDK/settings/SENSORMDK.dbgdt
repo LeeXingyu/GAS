@@ -1160,7 +1160,7 @@
                 <expressions>
                     <item>READ_Level</item>
                     <item>bArray</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
