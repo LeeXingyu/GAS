@@ -79,7 +79,7 @@ while(DOUT_Level()){};
   return(CountVol);
 }
 
-void Read_Init_Mode(INT8U Mode)
+void HX712_Init_Mode(INT8U Mode)
 {
   unsigned char i;
   
