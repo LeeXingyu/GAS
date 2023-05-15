@@ -1664,6 +1664,9 @@
             <name>$PROJ_DIR$\program.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Components\RFM64\Rfm64.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Components\SPI\SPI.c</name>
         </file>
         <file>

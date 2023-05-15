@@ -28,19 +28,7 @@ static unsigned long ReadCount(void)
   HX712_CLK_L();
   Count = 0;
   //读取气体是否有气压
-  while(DOUT_Level())
-  {
-   /* TimeOut--;
-    delay_us();
-    if(!TimeOut) 
-    {
-      USART_SendStr("ReadCount timeout\n");
-      Time_flag = FALSE;
-      return (Count);
-    }
-    else Time_flag = TRUE;*/
-    
-  };
+  while(DOUT_Level()){};
   
   for (i=0;i<24;i++)
   {
@@ -74,18 +62,7 @@ static unsigned long ReadVoltage(void)
   HX712_CLK_L();
   CountVol = 0;
   //读取BAT转换数据
-  while(DOUT_Level())
-  {
-/*    TimeOut--;
-    delay_us();
-    if(!TimeOut) 
-    {
-      USART_SendStr("ReadVoltage timeout\n");
-      Time_flag = FALSE;
-      return (CountVol);
-    }
-    else Time_flag = TRUE;*/
-  };
+while(DOUT_Level()){};
   
   for (i=0;i<24;i++)
   {
@@ -109,17 +86,7 @@ void Read_Init_Mode(INT8U Mode)
   HX712_CLK_L();
   
   //AD转换是否完成
-    while(DOUT_Level())
-  {
-   /* TimeOut--;
-    delay_us();
-    if(!TimeOut) 
-    {
-      USART_SendStr("Read_Init_Mode timeout\n");
-      Time_flag = FALSE;
-    }
-    else Time_flag = TRUE;*/
-  };
+  while(DOUT_Level()){};
   
   for (i=0;i<Mode;i++)
   {
@@ -152,7 +119,7 @@ void tx_ReadCount(void)
 void tx_ReadVoltage(void)
 {
    unsigned long  CountVol;
-   float Bat_Vol;
+   //float Bat_Vol;
     CountVol = ReadVoltage();
     //小于3.3V的ad值时发送数据
     //Bat_Vol = (float)(((uint32_t)CountVol)/8388607*(3.3/2)/3.2*(56+3.2));

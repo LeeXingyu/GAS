@@ -62,7 +62,7 @@ static u16 GetMedianNum(u8 Value_Len)
 	}	
 	// 计算中值
 	// 数组有偶数个元素，返回中间两个元素平均值
-	bTemp = (bArray[Value_Len / 2] + bArray[Value_Len / 2 + 1]) / 2;
+	bTemp = (bArray[Value_Len / 2 - 1] + bArray[Value_Len / 2] + bArray[Value_Len / 2 + 1] +  bArray[Value_Len / 2 + 2]) / 4;
 	return bTemp;
 }
 

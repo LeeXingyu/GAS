@@ -85,6 +85,7 @@ void SX1212_SetFreqBand( INT8U  freq_band  )
 ============================================================================*/
 void SX1212_WriteReg( INT8U addr, INT8U value )
 {
+    SX1212_DATA_HIGH();
     SX1212_CFG_LOW( );
     SPI_ExchangeByte( (addr<<1) & 0x3E );
     SPI_ExchangeByte( value );
@@ -99,7 +100,7 @@ void SX1212_WriteReg( INT8U addr, INT8U value )
 INT8U SX1212_ReadReg( INT8U addr )
 {
     INT8U btmp;
-    
+    SX1212_DATA_HIGH();
     SX1212_CFG_LOW( );
     SPI_ExchangeByte( ( (addr<<1) & 0x7E ) | 0x40 );
     btmp = SPI_ExchangeByte( 0 );

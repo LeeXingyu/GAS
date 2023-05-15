@@ -34,22 +34,23 @@ int main(void)
       //关闭功能的系统时钟
       //USART_SendStr("init ok\n"); 
      // GPIO_Init_Colse();  //关闭GPIO
-      Active_Halt_Colse();
-      enableInterrupts(); //开启总中断  
-      
+     // Active_Halt_Colse();     
       //State = 1;
       
       while(1)
       { 
         if(State)
         {  
-          StandyFun();
-          Gas_CheckFun();
+          SX1212_SetMode(MODE_STDBY);
+          //   SX1212_EnterReceiveMode(  );//接收使能     
+          //StandyFun();
+          //Gas_CheckFun();
         }
         else
         {
-          //QA_PowerH();
-          PWR_UltraLowPowerCmd(ENABLE);//超低功耗
+           SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+//          //QA_PowerH();
+//          PWR_UltraLowPowerCmd(ENABLE);//超低功耗
           LowPowerStart();
           LowPowerStop();
         }

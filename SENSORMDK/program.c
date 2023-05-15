@@ -15,12 +15,20 @@ void HardWare_Init(void)
       TEV_CTRL_INIT();
 //      
       HX712_GPIO_INIT();//hx712&ADC GPIO_init
-     
-      TIM3_Init();
-      
       HX712_CLK_H();
       delay_ms(1);
-      QA_PowerL();
+//
+      SPI_Initial();
+      GPIO_Initial();//SPI_GPIO_INIT       
+//    复位CSx1212 
+      SX1212_Init( );
+//      SX1212_EnterReceiveMode(  );//接收使能
+      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+
+    delay_ms(10);
+    //SX1212_SetMode( MODE_SLEEP );
+      
+//      QA_PowerL();
     //状态位初始化
         
 }
@@ -37,36 +45,36 @@ void SX1212_SEND(void)
 void LowPowerStart(void)
 {    
     Active_Halt_Colse();
+    QA_PowerL();
+    HX712_CLK_H();
     Gas_check_Times = 1;
     Check_flag = 0;
-
+    enableInterrupts(); //开启总中断  
+    PWR_UltraLowPowerCmd(ENABLE);//超低功耗
     halt(); 
 }
 //退出低功耗
 void LowPowerStop(void)
 {
-    QA_PowerH();
+//    QA_PowerH();
 
     //开启时钟
     Active_Halt_Open();
-    //初始化定时器 sx1212 adc
-    TIM3_Init();
-//      SPI_Initial();
-//      GPIO_Initial();//SPI_GPIO_INIT
-//  
-      Air_detection_Init();//ADC初始化        
-//      复位CSx1212 
-//      SX1212_Init( );
-//      SX1212_EnterReceiveMode(  );//接收使能
-//      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
     
-    delay_ms(10);
+    //初始化定时器 sx1212 adc
+//    TIM3_Init();
+////  
+    Air_detection_Init();//ADC初始化      
+    SPI_Initial();
+    GPIO_Initial();//SPI_GPIO_INIT   
+////      复位CSx1212 
+    SX1212_Init( );
+    SX1212_EnterReceiveMode(  );//接收使能
+//    SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+    
+    delay_ms(8);
     //SX1212_SetMode( MODE_SLEEP );
-    HX712_CLK_H();
-    QA_PowerH();//外接指示灯进行判断
-    delay_ms(50);
-    QA_PowerL();
-    delay_ms(50);
+
 }
 
 //待机模式下 电量与通讯接收

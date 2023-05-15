@@ -26,8 +26,9 @@ static INT8U flagEnableTimeOut=1;
 
 /*以下是自己修改的接口程序*/
 //初始化SPI 这里目前使用SPI1的默认模式 可能后续需要修改
-void SPIInit(){
-  SPI_DeInit  ( SPI1) ; 
+void SPIInit(){ 
+  SPI_DeInit  ( SPI1) ;   
+  CLK_PeripheralClockConfig(CLK_Peripheral_SPI1, ENABLE); 
 }
 
 //设置IRQ_0 1的使能 通过设置对应IO口的工作方式
