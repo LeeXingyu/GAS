@@ -43,11 +43,11 @@ static unsigned long ReadCount(void)
   Count=Count^0x800000;
   HX712_CLK_L();
   // ×ª³É BAT
-  delay_us();
-  delay_us();
+  delay_us(1);
+  delay_us(1);
   HX712_CLK_H();
-  delay_us();
-  delay_us();
+  delay_us(1);
+  delay_us(1);
   HX712_CLK_L();
   return(Count);
 }
@@ -91,8 +91,8 @@ void HX712_Init_Mode(INT8U Mode)
   for (i=0;i<Mode;i++)
   {
      HX712_CLK_H();
-     delay_us();
-     delay_us();
+     delay_us(1);
+     delay_us(1);
      HX712_CLK_L();
    
   }

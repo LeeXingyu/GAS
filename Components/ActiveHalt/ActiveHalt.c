@@ -10,8 +10,8 @@ void Active_Halt_Colse(void)
   USART_DeInit(USART1); //重新将USART1设置为缺省值的USART1
   CLK_PeripheralClockConfig (CLK_Peripheral_USART1,DISABLE);//关闭USART时钟   
 
-  SPI_DeInit(SPI1);
-  CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,DISABLE);//关闭SPI时钟
+//  SPI_DeInit(SPI1);
+//  CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,DISABLE);//关闭SPI时钟
 
   ADC_DeInit(ADC1);//
   CLK_PeripheralClockConfig (CLK_Peripheral_ADC1,DISABLE);//开启ADC时钟
@@ -34,8 +34,8 @@ void Active_Halt_Open(void)
    CLK_PeripheralClockConfig (CLK_Peripheral_USART1,ENABLE);//关闭USART时钟   
    //USART_DeInit(USART1); //重新将USART1设置为缺省值的USART1
 
-   CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,ENABLE);//关闭SPI时钟
-   SPI_DeInit(SPI1);
+//   CLK_PeripheralClockConfig (CLK_Peripheral_SPI1,ENABLE);//关闭SPI时钟
+//   SPI_DeInit(SPI1);
    
    CLK_PeripheralClockConfig (CLK_Peripheral_ADC1,ENABLE);//开启ADC时钟
    ADC_DeInit(ADC1);//  

@@ -31,7 +31,7 @@
 //------------------------------------------------------------------------------
 //void delay_us(u16 nCount);
 void delay_ms(u16 nCount);
-void delay_us(void);
+void delay_us(u16 nCount);
 void Delay(__IO uint16_t nCount);
 //------------------------------------------------------------------------------
 // Function Name : delay_10us

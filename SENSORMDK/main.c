@@ -16,12 +16,12 @@
 ============================================================================*/
 
 extern INT8U  State;
-
+extern INT8U  Check_flag;
 
 
 
 int main(void)
-{
+{ 
 
       PWR_FastWakeUpCmd(ENABLE);  //快速唤醒使能	
       GPIO_Init_Colse();  //关闭GPIO
@@ -33,13 +33,26 @@ int main(void)
             
       while(1)
       { 
+        unsigned char rc = ERROR;
+
+       
         if(State)
-        {  
-          //SX1212_SetMode(MODE_STDBY);
-          //SX1212_EnterReceiveMode(  );//接收使能     
-          StandyFun();
-          Gas_CheckFun();
-        }
+        {       
+//            if(Check_flag)    
+//            {  
+//              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
+//              StandyFun();
+//              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE); 
+//              SX1212_SetMode( MODE_SLEEP );
+//              HX712_CLK_H(); 
+//            }   
+        ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+        QA_PowerH();
+        delay_ms(100);
+        QA_PowerL();
+        delay_ms(100);          
+//
+       }
         else
         {
           LowPowerStart();

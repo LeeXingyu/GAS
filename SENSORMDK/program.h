@@ -11,7 +11,7 @@
 #include "usart.h"
 #include "adc.h"
 #include "ETC.h"
-#include "SX1212.h"
+//#include "SX1212.h"
 #include "HX712.h"
 #include "activehalt.h"
 #include "SPI.h"

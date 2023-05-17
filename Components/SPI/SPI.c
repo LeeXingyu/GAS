@@ -43,8 +43,7 @@ void SPI_Initial( void )
 	    
 	 SPI_Cmd(SPI1,ENABLE);	/* Ê¹ÄÜSPI */
          		//Config the GPIOs for SPI bus
-        GPIO_Init( GPIOB, GPIO_Pin_7,GPIO_Mode_In_PU_No_IT );
-        GPIO_Init( GPIOB, GPIO_Pin_5 | GPIO_Pin_6, GPIO_Mode_Out_PP_Low_Fast );
+
 }
 
 /*==============================================================================
@@ -55,6 +54,8 @@ OUTPUT   : None
 ==============================================================================*/
 void GPIO_Initial( void )
 {
+          GPIO_Init( GPIOB, GPIO_Pin_7,GPIO_Mode_In_PU_No_IT );
+        GPIO_Init( GPIOB, GPIO_Pin_5 | GPIO_Pin_6, GPIO_Mode_Out_PP_Low_Fast );
     //config the CSN for RF module, CSN = PB2
     GPIO_Init( GPIOB, GPIO_Pin_2, GPIO_Mode_Out_PP_Low_Fast );
     GPIO_SetBits( GPIOB, GPIO_Pin_2);

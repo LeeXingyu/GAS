@@ -3,6 +3,11 @@
 ==============================================================================*/
 #include "SX1212.H"
 
+
+typedef struct {
+    unsigned char addr;
+    unsigned char val;
+}_SX1212_REG;
 /*============================================================================
 *Function:  SX1212_Init( ) => Initialize the SX1212 device
 *Input   :  None
@@ -12,32 +17,21 @@
 INT8U ConfigTable[] =
 {   
 // Write  register add时  只有中间五位有效   
-    0x30,   
-    0xA4,    
-    0x03,  
-    0x63,    
-    0x1F,    
-    0xC6,    
-    143, //433MHz   
-    56,    
-    55,   
-    0x77,    
-    0x2F, 
-    0x19,
-    0xCF, 0xCC,
-    0x09, 
-    0x00, 
-    0xA, 0x38, 0x28, 0x0C, 
-    0x00, 
-    0x69, 0x81, 0x7E, 0x96, 
-    0x70,
+    0x30,0xA4,0x07,0x07,0x1F, 0xC6, 
+    143, //433MHz  
+    56,   55,       
+    0x77,0x2F,0x19, 
+    0xCF, 0x0C, 0x09, 0x00, 0xA3, 0x38, 0x28, 0x0C, 0x00, 
+    0x2D, 0xD4, 0x7E,0x96,
+    0x72,
     0x3C,
-    0x40, 0x00, 
+    0x40, 
+    0x00, 
     // 可变长度 1byte前导文 off whitening
     // 开启CRC 
-    0x88, 
+    0xC8, 
     0x00,
-    
+   
 		/*
 		0x30, 0xA4, 0x07, 0x07, 0x1F, 0xC6, 
 		107, //434MHz
@@ -53,11 +47,17 @@ INT8U ConfigTable[] =
 void SX1212_Init( void )
 {
     INT8U i;
+    _SX1212_REG const *p;
     for( i = 0; (i+1) <= 0x1F; i++ )
     {
         if( i < 0x14 )	{ SX1212_WriteReg( i, ConfigTable[i] ); }
         else    { SX1212_WriteReg( i+1, ConfigTable[i] ); }
     }
+//    for(i=sizeof(RegistersCfg)/sizeof(_SX1212_REG); i>0; i--)
+//    {
+//        SX1212_WriteReg(p->addr, p->val);
+//        p++;
+//    }
 }
 /*============================================================================
 *Function:  SX1212_SetFreqBand( ) => Set the frequency band of SX1212

@@ -18,25 +18,23 @@ void HardWare_Init(void)
       HX712_CLK_H();
       delay_ms(1);
 //
-      SPI_Initial();
+//      SPI_Initial();
       GPIO_Initial();//SPI_GPIO_INIT       
 //    复位CSx1212 
-      SX1212_Init( );
-      SX1212_EnterReceiveMode(  );//接收使能
-      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
-
-      delay_ms(10);
-    
-      
-
-        
+//      SX1212_Init( );
+//      SX1212_EnterReceiveMode(  );//接收使能
+//      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+      //RFM64
+      InitSX1212();
+      SetRFMode(RF_SLEEP);
+      delay_ms(10);        
 }
 
 //开启低功耗
 void LowPowerStart(void)
 {  
     //模块低功耗
-    SX1212_SetMode( MODE_SLEEP );
+    SetRFMode( MODE_SLEEP );
     QA_PowerL();
     HX712_CLK_H();
     //关闭时钟
@@ -61,44 +59,37 @@ void LowPowerStop(void)
 //  
     Air_detection_Init();//ADC初始化      
 //    
-    SPI_Initial();
-    GPIO_Initial();//SPI_GPIO_INIT   
-//  复位CSx1212 
-    SX1212_Init( );
-    SX1212_EnterReceiveMode(  );//接收使能
-//  SX1212_SetMode( MODE_SLEEP );//转为sleep模式   
+//    SPI_Initial();
+//    GPIO_Initial();//SPI_GPIO_INIT   
+////  复位CSx1212 
+//    SX1212_Init( );
+    
+//   SX1212_EnterReceiveMode(  );//接收使能
+    SetRFMode( MODE_SLEEP );//转为sleep模式   
     delay_ms(8);
-//  SX1212_SetMode( MODE_SLEEP );
-
 }
 
-//待机模式下 电量与通讯接收
+//待机模式 功能实现
 void StandyFun(void)
-{
-  if(Check_flag)    
-  {  
-     CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
-     
+{    
      Rfm_Times = 40;  //定时器10s计数状态位
      Check_flag = 0;
 
      //10s 通信检测
-    //SX1212_EnterReceiveMode();    
+    //SX1212_EnterReceiveMode();  
+     
     //Hx712 初始状态设定
     HX712_CLK_L();
-    HX712_Init_Mode(ReadVoltage_Mode);
+    HX712_Init_Mode(ReadCount_Mode);
     delay_ms(10);  
     //读取电池电压并发送
-    tx_ReadVoltage();
+    tx_ReadCount();
     
     //接受主机发送关闭阀门的指令
    // recv_sx1212_data();
-  }
-}
-//待机状态下气体检测设定
-void Gas_CheckFun(void)
-{
-    if(!Gas_check_Times)
+    
+    // 气体检测
+     if(!Gas_check_Times)
     {
       //检测是否有气压
       if(Air_detection())
@@ -112,9 +103,7 @@ void Gas_CheckFun(void)
         //无气压 60s检测一次
         Gas_check_Times = 6; 
       }
+      tx_ReadVoltage();
     }
-  
-  CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);  
-  SX1212_SetMode( MODE_SLEEP );
-  HX712_CLK_H(); 
+
 }

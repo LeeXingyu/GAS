@@ -17,18 +17,20 @@ static int TimeOut = 20000;
 INT8U recv_sx1212_data(void)
 {
         INT8U txBuffer[5] = {0x43,0x01,0x01,0x04,0x01};
+       // SX1212_SendPacket_Var(txBuffer,5);
         char revalue;
         SX1212_EnterReceiveMode(  );
+         
         while( !SX1212_READ_IRQ_1( ))
         {
-          TimeOut--;
-          delay_us();
-          if(!TimeOut) 
-          {
-            USART_SendStr("recv sx1212 timeout\n");
-            revalue =  0;
-          }
-        }
+//          TimeOut--;
+//          delay_us();
+//          if(!TimeOut) 
+//          {
+//            USART_SendStr("recv sx1212 timeout\n");
+//            revalue =  0;
+//          }
+        };
         data.rx_len = SX1212_ReceivePacket(data.rx_data);
         if(data.rx_len <= 5)
         {
