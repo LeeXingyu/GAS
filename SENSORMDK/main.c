@@ -19,7 +19,6 @@ extern INT8U  State;
 extern INT8U  Check_flag;
 
 
-
 int main(void)
 { 
 
@@ -30,14 +29,16 @@ int main(void)
       //只使用了内部晶振
       CLK_Config(CLK_SYSCLKSource_HSI);//初始化系统时钟 LSI      
       HardWare_Init(); 
-            
+      unsigned char test_id[12];   
+      unsigned char test_id2[12]; 
       while(1)
       { 
         unsigned char rc = ERROR;
-
-       
-        if(State)
-        {       
+        
+//        Read_UID();
+//       
+//        if(State)
+//        {       
 //            if(Check_flag)    
 //            {  
 //              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
@@ -46,18 +47,33 @@ int main(void)
 //              SX1212_SetMode( MODE_SLEEP );
 //              HX712_CLK_H(); 
 //            }   
-        ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+//       ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+       Rcv_MasterDataParse();
+//	unsigned int count;
+//        GetMasterId(test_id);
+//	ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+//	if(rc == OK)
+//	{
+//           GetMasterId(test_id2);
+//		count = 0;
+//		while (count < RF_Pkt.key)
+//		{
+//			Master_data_Prase(RF_Pkt.fill[count]);
+//			count++;
+//		}
+//	}
         QA_PowerH();
         delay_ms(100);
         QA_PowerL();
-        delay_ms(100);          
+        delay_ms(100); 
+        
 //
-       }
-        else
-        {
-          LowPowerStart();
-          LowPowerStop();
-        }
+//       }
+//        else
+//        {
+//          LowPowerStart();
+//          LowPowerStop();
+//        }
 
         
       }

@@ -4,6 +4,8 @@
 #include "stm8l15x.h"
 #include "stm8l15x_it.h"
 #include "stm8l15x_conf.h"
+#include "stm8l15x_flash.h"
+#include <string.h>
 //Sys
 #include "delay.h"
 #include "rtc.h"
@@ -19,6 +21,7 @@
 #include "timer.h"
 #include "Rfm64.h"
 #include "data.h"
+#include "Extdata.h"
 
 void HardWare_Init(void); 
 void LowPowerStart(void);

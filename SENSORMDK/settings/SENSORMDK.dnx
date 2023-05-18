@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>3897819445</Checksum>
+        <Checksum>3565994994</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -35,7 +35,7 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\Components\DATA\data.c}.24.9" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\main.c}.65.9" 1 0 0 0 "" 0 ""</Bp0>
         <Count>1</Count>
     </Breakpoints>
     <Aliases>

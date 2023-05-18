@@ -2106,6 +2106,12 @@
             <name>$PROJ_DIR$\..\CMSIS\stm8l15x_conf.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\STM8L15x_StdPeriph_Driver\src\stm8l15x_flash.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\STM8L15x_StdPeriph_Driver\inc\stm8l15x_flash.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\CMSIS\stm8l15x_it.c</name>
         </file>
         <file>
@@ -2121,19 +2127,22 @@
             <name>$PROJ_DIR$\..\Components\ADC\adc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Components\DATA\data.c</name>
+            <name>$PROJ_DIR$\..\Components\RFM64\Crc.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Components\DATA\data.h</name>
+            <name>$PROJ_DIR$\..\Components\DATA\data.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Components\ETC\ETC.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\Components\DATA\Extdata.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\Components\HX712\HX712.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Components\mytypedef.h</name>
+            <name>$PROJ_DIR$\..\Components\MyTypeDef.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\program.c</name>
