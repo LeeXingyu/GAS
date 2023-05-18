@@ -16,5 +16,4 @@
 void FLASH_ReadNByte(uint8_t* pBuffer, uint32_t ReadAddr, uint8_t nByte);
 void FLASH_WriteNByte(uint8_t* pBuffer, uint32_t WriteAddr, uint8_t nByte);
 
-
 #endif //__EXTDATA_H_

@@ -32,7 +32,7 @@ static Cooker_Parse_t				tCooker_Entity;
 static Slave_State_e				mPARSE_State		= eCOOKER_PARSE_NOP;
 static unsigned int				usCooker_ParseLength= 0;
 static unsigned int				usCooker_ParseCheck = CRC_INITIAL;
-static int TimeOut = 20000;
+
 unsigned char UID_data[12];
 
 static void (*const a_pfnCooker_Parse[])(int c) =
@@ -101,22 +101,23 @@ static void MasterParse_Payload(int c)
 
 static void MasterParse_Check(int c)
 {
-  usCooker_ParseLength++;
+        usCooker_ParseLength++;
 	if (++usCooker_ParseLength >= 2)
 	{
 	    usCooker_ParseLength = 0;
-            //if ((unsigned char)eCOOKER_SET_SYS_ID != tCooker_Entity.cmd)
-            if (0X01 != tCooker_Entity.cmd)
+            if ((unsigned char)eCOOKER_SET_SYS_ID != tCooker_Entity.cmd)
+            //if (0X01 != tCooker_Entity.cmd)
             {
                 unsigned char id[COOKER_PARSE_ADDR_LEN];
 
                 GetMasterId(id);
 
                 if (cmp_buf((char *)id, (char *)tCooker_Entity.addr, COOKER_PARSE_ADDR_LEN))
-                    Cooker_AFNChk(&tCooker_Entity);
+                    Cooker_AFN_Handle(&tCooker_Entity);
             }
             else
-            {   Cooker_AFNChk(&tCooker_Entity);
+            {   
+              Cooker_AFN_Handle(&tCooker_Entity);
                //FLASH_WriteNByte((unsigned char *)tCooker_Entity.addr,PARA_START_INDEX,FlASH_OPER_SIZE);
             }
 	}
@@ -208,7 +209,7 @@ void GetMasterId(unsigned char *id)
   FLASH_ReadNByte(id,PARA_START_INDEX,FlASH_OPER_SIZE);
 }
 
-unsigned int Cooker_Load(Cooker_Parse_t *entity)
+unsigned int Slave_Load(Cooker_Parse_t *entity)
 {
 	unsigned int check = CRC_INITIAL;
 	unsigned int index = 0, count;
@@ -218,7 +219,7 @@ unsigned int Cooker_Load(Cooker_Parse_t *entity)
 	load[index++] = COOKER_PARSE_HEADER;
 	check = crc16_ccitt_byte(check, COOKER_PARSE_HEADER);
 
-	Cooker_GetId(id);
+	GetMasterId(id);
 	for (count = 0; count < COOKER_PARSE_ADDR_LEN; count++)
 	{
 		load[index++] = id[count];
@@ -241,13 +242,43 @@ unsigned int Cooker_Load(Cooker_Parse_t *entity)
 	load[index++] = (unsigned char)check;
 	load[index++] = (unsigned char)(check >> 8);
 
-	Cooker_WirelessSendLoad(load, index);
+	Slave_WirelessSendLoad(load, index);
 
 	return index;
 }
 
+void Slave_WirelessSendLoad(char *load, unsigned int len)
+{
+	if (BuildPacket((unsigned char *)load, len))
+		SendRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt));
+    
+
+}
+
+void Gas_State_Load(unsigned char gas_state)
+{
+      Cooker_Parse_t entity;
+
+      entity.cmd	= eCOOKER_STATE_Gas;
+      entity.payload[0]	= gas_state;
+      entity.length		= 1;
+
+      Slave_Load(&entity);
+}
+
+void Bat_State_Load(unsigned char gas_state)
+{
+      Cooker_Parse_t entity;
+
+      entity.cmd	= eCOOKER_STATE_Bat;
+      entity.payload[0]	= gas_state;
+      entity.length		= 1;
+
+      Slave_Load(&entity);
+}
 
 /*
+//¶ÁÈ¡stm8LµÄID
 void Cooker_GetId(unsigned char *CPU_XDATA id)
 {
   UID_data[0]=*(unsigned char*)(0x4926);
@@ -263,53 +294,11 @@ void Cooker_GetId(unsigned char *CPU_XDATA id)
   UID_data[10]=*(unsigned char*)(0x4930);
   UID_data[11]=*(unsigned char*)(0x4931);
 }
-
-unsigned int Cooker_Load(Cooker_Parse_t *entity)
-{
-	unsigned int check = CRC_INITIAL;
-	unsigned int index = 0, count;
-	unsigned char id[COOKER_PARSE_ADDR_LEN];
-	char load[60];
-
-	load[index++] = COOKER_PARSE_HEADER;
-	check = crc16_ccitt_byte(check, COOKER_PARSE_HEADER);
-
-	Cooker_GetId(id);
-	for (count = 0; count < COOKER_PARSE_ADDR_LEN; count++)
-	{
-		load[index++] = id[count];
-		check = crc16_ccitt_byte(check, id[count]);
-	}
-	
-	load[index++] = entity->length;
-	check = crc16_ccitt_byte(check, entity->length);
-
-	load[index++] = entity->cmd;
-	check = crc16_ccitt_byte(check, entity->cmd);
-
-	for (count = 0; count < entity->length; count++)
-	{
-		load[index++] = entity->payload[count];
-		check = crc16_ccitt_byte(check, entity->payload[count]);
-	}
-
-	check = ~check;
-	load[index++] = (unsigned char)check;
-	load[index++] = (unsigned char)(check >> 8);
-
-	Cooker_WirelessSendLoad(load, index);
-
-	return index;
-}
-
-void Cooker_WirelessSendLoad(char *load, unsigned int len)
-{
-	if (BuildPacket((unsigned char *)load, len))
-		SendRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt));
-    
-
-}
 */
+
+
+
+
 /*--------------------------------------------------------------------------------------------------------
                    									   0ooo
                    								ooo0     (   )

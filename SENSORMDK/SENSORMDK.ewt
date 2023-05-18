@@ -2160,12 +2160,6 @@
             </configuration>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\Components\SX1212\SX1212.c</name>
-            <configuration>
-                <name>Debug</name>
-            </configuration>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\Components\Timer\timer.c</name>
         </file>
         <file>

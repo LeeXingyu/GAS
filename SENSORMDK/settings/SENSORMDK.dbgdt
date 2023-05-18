@@ -1168,7 +1168,7 @@
                     <item>id</item>
                     <item>test_id</item>
                     <item>test_id2</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

@@ -18,12 +18,8 @@ void HardWare_Init(void)
       HX712_CLK_H();
       delay_ms(1);
 //
-//      SPI_Initial();
       GPIO_Initial();//SPI_GPIO_INIT       
-//    复位CSx1212 
-//      SX1212_Init( );
-//      SX1212_EnterReceiveMode(  );//接收使能
-//      SX1212_SetMode( MODE_SLEEP );//转为sleep模式
+
       //RFM64
       InitSX1212();
       SetRFMode(RF_SLEEP);
@@ -34,7 +30,7 @@ void HardWare_Init(void)
 void LowPowerStart(void)
 {  
     //模块低功耗
-    SetRFMode( MODE_SLEEP );
+    SetRFMode( RF_SLEEP );
     QA_PowerL();
     HX712_CLK_H();
     //关闭时钟
@@ -53,19 +49,10 @@ void LowPowerStop(void)
 {
     //开启时钟
     Active_Halt_Open();
- 
-    //初始化定时器 sx1212 adc
-    TIM3_Init();
-//  
-    Air_detection_Init();//ADC初始化      
-//    
-//    SPI_Initial();
-//    GPIO_Initial();//SPI_GPIO_INIT   
-////  复位CSx1212 
-//    SX1212_Init( );
-    
-//   SX1212_EnterReceiveMode(  );//接收使能
-    SetRFMode( MODE_SLEEP );//转为sleep模式   
+    //初始化定时器 
+    TIM3_Init();  
+    //Air_detection_Init();//ADC初始化      
+    SetRFMode( RF_SLEEP );//转为sleep模式   
     delay_ms(8);
 }
 
@@ -74,29 +61,19 @@ void StandyFun(void)
 {    
      Rfm_Times = 40;  //定时器10s计数状态位
      Check_flag = 0;
-
-     //10s 通信检测
-    //SX1212_EnterReceiveMode();  
-     
-    //Hx712 初始状态设定
-    HX712_CLK_L();
-    HX712_Init_Mode(ReadCount_Mode);
-    delay_ms(10);  
-    //读取电池电压并发送
-    tx_ReadCount();
-    
-    //接受主机发送关闭阀门的指令
-   // recv_sx1212_data();
-    
+         
     // 气体检测
      if(!Gas_check_Times)
     {
-      //检测是否有气压
-      if(Air_detection())
+      //Hx712 初始状态设定
+      HX712_CLK_L();
+      HX712_Init_Mode(ReadCount_Mode);
+      delay_ms(10);
+      //检测是否有气压      
+      if(tx_ReadCount() != GAS_BAT_LOW)
       {
         //有气压 10s检测一次 并上传
-        Gas_check_Times = 1;
-        tx_ReadCount();
+        Gas_check_Times = 1;       
       }
       else
       {

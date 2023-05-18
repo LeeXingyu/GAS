@@ -30,36 +30,48 @@ void FLASH_ReadNByte(uint8_t* pBuffer, uint32_t ReadAddr, uint8_t nByte)
   FLASH_Lock(FLASH_MemType_Program);                //上锁
 }
 
-void Cooker_AFNChk(Cooker_Parse_t *entity)
+void Cooker_AFN_Handle(Cooker_Parse_t *entity)
 {
-  FLASH_WriteNByte((unsigned char *)entity->addr,PARA_START_INDEX,FlASH_OPER_SIZE);
-//    switch ((Cooker_Cmd_e)entity->cmd)
-//    {
-//    case eCOOKER_SET_SYS_ID:
-//    {
-//        if (0 == entity->length)
-//        {
-//            //ucSendSetIdResult = 1;
-//
-//            //memcpy((char *)a_ucCooker_BackupId, (char *)entity->addr, COOKER_PARSE_ADDR_LEN);
-//            FLASH_WriteNByte((char *)entity->addr,PARA_START_INDEX,FlASH_OPER_SIZE);
-//        }
-//    }
-//    break;
-//    case eCOOKER_FIRE_STATE:
-//    {
-//        // if (1 == entity->length)
-//        //	bSend_FireState = TRUE;
-//    }
-//    break;
-//    case eCOOKER_CTRL_FIRE:
-//    {
-//        if ((1 == entity->length) && (COOKER_PARSE_FALSE == entity->payload[0]))
-//            Cooker_MasterCtrlOff();
-//    }
-//    break;
-//
-//    default:
-//        break;
-//    }
+    switch ((Cooker_Cmd_e)entity->cmd)
+    {
+    case eCOOKER_SET_SYS_ID:
+    {
+        if (1 == entity->length)
+        {
+            FLASH_WriteNByte((unsigned char *)entity->addr,PARA_START_INDEX,FlASH_OPER_SIZE);
+        }
+    }
+    break;
+    case eCOOKER_FIRE_STATE:
+    {
+        // if (1 == entity->length)
+        //	bSend_FireState = TRUE;
+    }
+    break;
+    case eCOOKER_CTRL_Gas:
+    {
+        if ((1 == entity->length) && (COOKER_PARSE_FALSE == entity->payload[0]))
+        {
+            //关闭气阀
+            QA_PowerH();//关闭电磁阀
+            if(!READ_Level())
+            {
+               delay_ms(6);
+               if(!READ_Level())
+               {//发送关闭气阀的指令
+                Cooker_Parse_t entity;
+                entity.cmd	= eCOOKER_CTRL_Gas;
+                entity.payload[0]	= COOKER_PARSE_FALSE;
+                entity.length		= 1;
+                Slave_Load(&entity);             
+               }
+               else break;
+            }
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
 }

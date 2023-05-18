@@ -3,7 +3,6 @@
 
 //static int TimeOut = 20000; //20ms
 bool Time_flag = FALSE;
-
 /*********************************************************************************/
 /*
 º¯ÊýÃû£ºiic_init
@@ -99,21 +98,26 @@ void HX712_Init_Mode(INT8U Mode)
   HX712_CLK_L();
 }
 
-void tx_ReadCount(void)
+unsigned char tx_ReadCount(void)
 {
   unsigned long  Count;
     
     Count = ReadCount();
-    if(Time_flag == TRUE)
+    if(Count >= GAS_thresholdH )
     {
-      data.tx_data[0] = 0x43;
-      data.tx_data[1] = 0x01;	   
-      data.tx_data[2] = 0x01;
-      data.tx_data[3] = 0x03;
-      data.tx_data[4] = (INT8U)&Count;   
-      delay_ms(10);
-      //SX1212_SendPacket_Var(data.tx_data,5);
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     (data.tx_data,5);
+      //Gas_State_Load(GAS_HIGH);
+      return GAS_HIGH;
+    } 
+    else if(Count <= GAS_thresholdL)
+    {
+      //Gas_State_Load(GAS_BAT_LOW);
+      return GAS_BAT_LOW;
+    } 
+    else 
+    {
+      //Gas_State_Load(GAS_NORMAL);
+      return GAS_NORMAL;
+    } 
 }
 
 void tx_ReadVoltage(void)
@@ -125,15 +129,8 @@ void tx_ReadVoltage(void)
     //Bat_Vol = (float)(((uint32_t)CountVol)/8388607*(3.3/2)/3.2*(56+3.2));
     if(CountVol <= Bat_threshold)
     {
-
-      data.tx_data[0] = 0x43;
-      data.tx_data[1] = 0x01;	   
-      data.tx_data[2] = 0x01;
-      data.tx_data[3] = 0x03;
-      data.tx_data[4] = (INT8U)&CountVol;
-      delay_ms(10);
-     // SX1212_SendPacket_Var(data.tx_data,5);
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                (data.tx_data,5);
+       Bat_State_Load(GAS_BAT_LOW);
+    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 }
 
 

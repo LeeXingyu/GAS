@@ -57,16 +57,25 @@ typedef enum _Cooker_Cmd_e
 {
 	eCOOKER_SET_SYS_ID = 0,
 	eCOOKER_FIRE_STATE = 1,
-	eCOOKER_CTRL_FIRE  = 2,
-
+	eCOOKER_CTRL_Gas  = 2,
+        eCOOKER_STATE_Gas = 3,
+        eCOOKER_STATE_Bat = 4,
 	//eCOOKER_RSP = 0xEE,
 }Cooker_Cmd_e;
 
 void Rcv_MasterDataParse(void);
 void Master_data_Prase(int c);
 void GetMasterId(unsigned char *id);
+
+unsigned int Slave_Load(Cooker_Parse_t *entity);
+void Slave_WirelessSendLoad(char *load, unsigned int len);
+//发送数据
+void Gas_State_Load(unsigned char gas_state);
+void Bat_State_Load(unsigned char gas_state);
+//实现主机要求的功能函数
+void Cooker_AFN_Handle(Cooker_Parse_t *entity);
+
 /*
-unsigned int Cooker_Load(Cooker_Parse_t *CPU_XDATA entity);
 void Cooker_Parse(int c);
 
 */

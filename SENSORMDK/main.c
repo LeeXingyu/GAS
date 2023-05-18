@@ -29,51 +29,47 @@ int main(void)
       //只使用了内部晶振
       CLK_Config(CLK_SYSCLKSource_HSI);//初始化系统时钟 LSI      
       HardWare_Init(); 
-      unsigned char test_id[12];   
-      unsigned char test_id2[12]; 
+      unsigned char rc = ERROR;
+      unsigned int count;
       while(1)
       { 
-        unsigned char rc = ERROR;
-        
-//        Read_UID();
-//       
-//        if(State)
-//        {       
-//            if(Check_flag)    
-//            {  
-//              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
-//              StandyFun();
-//              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE); 
-//              SX1212_SetMode( MODE_SLEEP );
-//              HX712_CLK_H(); 
-//            }   
-//       ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
-       Rcv_MasterDataParse();
-//	unsigned int count;
-//        GetMasterId(test_id);
-//	ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
-//	if(rc == OK)
-//	{
-//           GetMasterId(test_id2);
-//		count = 0;
-//		while (count < RF_Pkt.key)
-//		{
-//			Master_data_Prase(RF_Pkt.fill[count]);
-//			count++;
-//		}
-//	}
-        QA_PowerH();
-        delay_ms(100);
-        QA_PowerL();
-        delay_ms(100); 
-        
-//
-//       }
-//        else
-//        {
-//          LowPowerStart();
-//          LowPowerStop();
-//        }
+       
+       
+        if(State)
+        {       
+            if(Check_flag)    
+            {  
+              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
+              ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+              if(rc == OK)
+              {
+                  count = 0;
+                  while (count < RF_Pkt.key)
+                  {
+                        Master_data_Prase(RF_Pkt.fill[count]);
+                        count++;
+                  }
+              }
+              //气体 电压检测
+              if(READ_Level())
+              {
+                delay_ms(6);
+                if(READ_Level())
+                {
+                  StandyFun();
+                }
+              }
+              SetRFMode( RF_SLEEP );
+              HX712_CLK_H(); 
+              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE); 
+            }   
+
+      }
+        else
+        {
+          LowPowerStart();
+          LowPowerStop();
+        }
 
         
       }
