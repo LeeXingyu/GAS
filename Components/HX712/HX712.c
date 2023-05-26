@@ -42,12 +42,12 @@ static unsigned long ReadCount(void)
   Count=Count^0x800000;
   HX712_CLK_L();
   // 转成 BAT
-  delay_us(1);
-  delay_us(1);
-  HX712_CLK_H();
-  delay_us(1);
-  delay_us(1);
-  HX712_CLK_L();
+//  delay_us(1);
+//  delay_us(1);
+//  HX712_CLK_H();
+//  delay_us(1);
+//  delay_us(1);
+//  HX712_CLK_L();
   return(Count);
 }
 //读取电源电压
@@ -83,18 +83,19 @@ void HX712_Init_Mode(INT8U Mode)
   unsigned char i;
   
   HX712_CLK_L();
-  
+  while(DOUT_Level()){};
   //AD转换是否完成
   while(DOUT_Level()){};
   
-  for (i=0;i<Mode;i++)
+  for (i=0;i<Mode-1;i++)
   {
      HX712_CLK_H();
-     delay_us(1);
      delay_us(1);
      HX712_CLK_L();
    
   }
+  HX712_CLK_H();
+  delay_us(1);
   HX712_CLK_L();
 }
 
@@ -105,22 +106,19 @@ unsigned char tx_ReadCount(void)
     Count = ReadCount();
     if(Count >= GAS_thresholdH )
     {
-      //Gas_State_Load(GAS_HIGH);
-      return GAS_HIGH;
+      return GAS_BAT_HIGH;
     } 
     else if(Count <= GAS_thresholdL)
-    {
-      //Gas_State_Load(GAS_BAT_LOW);
+    {   
       return GAS_BAT_LOW;
     } 
     else 
     {
-      //Gas_State_Load(GAS_NORMAL);
       return GAS_NORMAL;
     } 
 }
 
-void tx_ReadVoltage(void)
+unsigned char tx_ReadVoltage(void)
 {
    unsigned long  CountVol;
    //float Bat_Vol;
@@ -129,8 +127,9 @@ void tx_ReadVoltage(void)
     //Bat_Vol = (float)(((uint32_t)CountVol)/8388607*(3.3/2)/3.2*(56+3.2));
     if(CountVol <= Bat_threshold)
     {
-       Bat_State_Load(GAS_BAT_LOW);
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+       return GAS_BAT_LOW;
+    } 
+    else  return GAS_BAT_HIGH;
 }
 
 

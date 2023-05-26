@@ -28,7 +28,9 @@
 #include "timer.h"
 #include "ETC.h"
     
-INT8U  State = 0;
+unsigned short  Power_CurState = 0;
+unsigned short  Power_PreState = 0;
+unsigned int  BatCheck_Flag = 0;
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -191,11 +193,12 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
     if(READ_Level())
     {
       // 气体阀打开
-      State = 1;
+      Power_CurState = 1;
+      BatCheck_Flag++;
     }
-    else State = 0;
+    else Power_CurState = 0;
   }
-  else State = 0;
+  else Power_CurState = 0;
   EXTI_ClearITPendingBit(EXTI_IT_Pin1); 
     /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.

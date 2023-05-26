@@ -80,8 +80,8 @@ static const _SX1212_REG RegistersCfg[] = { // !!! user can reconfigure register
 
     {REG_FDEV, RF_FDEV_50},
 
-    {REG_BITRATE_MSB, RF_BIRATE_19200_MSB},
-    {REG_BITRATE_LSB, RF_BIRATE_19200_LSB},
+    {REG_BITRATE_MSB, RF_BIRATE_4800_MSB},
+    {REG_BITRATE_LSB, RF_BIRATE_4800_LSB},
 
     {REG_R1, RX_CENTER_FREQ_433MHZ_R},
     {REG_P1, RX_CENTER_FREQ_433MHZ_P},

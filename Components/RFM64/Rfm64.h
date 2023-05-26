@@ -182,6 +182,8 @@ void disable_IRQ(int n);
 #define RF_BIRATE_19200_MSB                0x02
 #define RF_BIRATE_19200_LSB                0x6E
 
+#define RF_BIRATE_200_MSB                0xFA
+#define RF_BIRATE_200_LSB                0xFE
 
 //// REG_MCPARAM6
 // PA_RAMP OOK

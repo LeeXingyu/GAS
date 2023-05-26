@@ -15,9 +15,24 @@
                 SCK		= PB5,	(Output)	Sx1212 SPI clock input 
 ============================================================================*/
 
-extern INT8U  State;
-extern INT8U  Check_flag;
 
+extern int  Check_flag;
+extern int Rfm_Times;
+extern unsigned short Power_PreState;
+extern unsigned short  Power_CurState;
+extern unsigned int  BatCheck_Flag;
+extern unsigned short  SlaveGasCTRL;
+
+enum
+{
+    n_SystemTask,
+    n_IDTaskSend,
+    n_CtrlGasTask,
+    n_GasTransmit,    
+    n_BatTransmit
+};
+
+static volatile unsigned char D_SystemRun;
 
 int main(void)
 { 
@@ -28,45 +43,76 @@ int main(void)
       /*测试打开以下两个函数*/
       //只使用了内部晶振
       CLK_Config(CLK_SYSCLKSource_HSI);//初始化系统时钟 LSI      
-      HardWare_Init(); 
-      unsigned char rc = ERROR;
-      unsigned int count;
+      HardWare_Init();
+      FirstPower_CheckService();
+      
       while(1)
       { 
-       
-       
-        if(State)
-        {       
-            if(Check_flag)    
-            {  
-              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
-              ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
-              if(rc == OK)
-              {
-                  count = 0;
-                  while (count < RF_Pkt.key)
-                  {
-                        Master_data_Prase(RF_Pkt.fill[count]);
-                        count++;
-                  }
-              }
-              //气体 电压检测
-              if(READ_Level())
-              {
-                delay_ms(6);
-                if(READ_Level())
-                {
-                  StandyFun();
+          
+        if(Power_CurState)
+        {   
+          Power_PreState = Power_CurState;
+          //不关闭定时器
+          Rcv_MasterDataParse();
+          //10s定时进入  以及 接收到数据进入
+          if((Check_flag >= 5) || (SlaveGasCTRL))
+          {             
+             CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
+             Rfm_Times = 8;
+             Check_flag= 0;
+             
+             switch(D_SystemRun)
+             {
+                 case n_SystemTask: // 系统任务
+                {   
+                    Slave_Service();
+                    D_SystemRun = n_IDTaskSend;
                 }
-              }
-              SetRFMode( RF_SLEEP );
-              HX712_CLK_H(); 
-              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE); 
-            }   
+                
+                case n_IDTaskSend:
+                {
+                    //Cooker_SendSetIdResult();
+                    D_SystemRun = n_CtrlGasTask;
+                }
+                
+                case n_CtrlGasTask:
+                {
+                  //接收关闭指令时 发送
+                    Cooker_SendGas_CTRL();
+                    D_SystemRun = n_GasTransmit;
+                }
+                
+                case n_GasTransmit:
+                {
+                    Slave_Send_GasState();
+                    D_SystemRun = n_BatTransmit;
+                }  
+                
+                case n_BatTransmit:
+                {
+                  if(BatCheck_Flag == 0)
+                  {
+                    Slave_Send_BatState();
+                   }
+                    D_SystemRun = n_SystemTask;                  
+                }
 
-      }
+                break;
+
+                default: // 系统时间异常
+                    D_SystemRun = n_SystemTask;
+                    break;
+            }              
+            QA_PowerH();
+            delay_ms(100);
+             QA_PowerL();
+            delay_ms(100);
+            HX712_CLK_H();
+            CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
+          }         
+       }
         else
-        {
+        {          
           LowPowerStart();
           LowPowerStop();
         }

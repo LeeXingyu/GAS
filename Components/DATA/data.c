@@ -23,15 +23,16 @@ static void MasterParse_Length(int c);
 static void MasterParse_Cmd(int c);
 static void MasterParse_Payload(int c);
 static void MasterParse_Check(int c);
-
-
-     
+    
 /* 全局变量定义 */
 data_buf data;
-static Cooker_Parse_t				tCooker_Entity;
-static Slave_State_e				mPARSE_State		= eCOOKER_PARSE_NOP;
-static unsigned int				usCooker_ParseLength= 0;
-static unsigned int				usCooker_ParseCheck = CRC_INITIAL;
+static Cooker_Parse_t	tCooker_Entity;
+static Slave_State_e	mPARSE_State		= eCOOKER_PARSE_NOP;
+static unsigned int	usCooker_ParseLength= 0;
+static unsigned int	usCooker_ParseCheck = CRC_INITIAL;
+
+unsigned char Gas_Pressure_state = 0;
+unsigned char Bat_Check_state = 0;
 
 unsigned char UID_data[12];
 
@@ -117,54 +118,10 @@ static void MasterParse_Check(int c)
             }
             else
             {   
-              Cooker_AFN_Handle(&tCooker_Entity);
-               //FLASH_WriteNByte((unsigned char *)tCooker_Entity.addr,PARA_START_INDEX,FlASH_OPER_SIZE);
+              Cooker_AFN_Handle(&tCooker_Entity);               
             }
+            mPARSE_State++;//放在这里会重启
 	}
-}
-//SX1212接收数据处理
-INT8U recv_sx1212_data(void)
-{
-        INT8U txBuffer[5] = {0x43,0x01,0x01,0x04,0x01};
-       // SX1212_SendPacket_Var(txBuffer,5);
-        char revalue;
-        SX1212_EnterReceiveMode(  );
-         
-        while( !SX1212_READ_IRQ_1( ))
-        {
-//          TimeOut--;
-//          delay_us();
-//          if(!TimeOut) 
-//          {
-//            USART_SendStr("recv sx1212 timeout\n");
-//            revalue =  0;
-//          }
-        };
-        data.rx_len = SX1212_ReceivePacket(data.rx_data);
-        if(data.rx_len <= 5)
-        {
-          if((data.rx_data[0] == 0x43) && (data.rx_data[2] == 1))
-         {
-           if(data.rx_data[3] == 0x04)//读取电磁阀关闭
-           {
-            QA_PowerH();//关闭电磁阀
-            SX1212_SendPacket_Var(txBuffer,5);
-            revalue =  1;
-           }
-         }
-         else 
-         {
-           USART_SendStr("recv sx1212 data_head error\n");
-           revalue =  0;
-         }
-       }
-       else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-       {
-         data.rx_len = 0;
-         USART_SendStr("recv sx1212 data error\n");
-         revalue =  0;
-       } 
-       return revalue;
 }
 
 void Rcv_MasterDataParse(void)
@@ -188,7 +145,7 @@ void Master_data_Prase(int c)
 {
     if (mPARSE_State > eCOOKER_PARSE_CHECK)
             mPARSE_State = eCOOKER_PARSE_NOP;
-
+    
     if (eCOOKER_PARSE_NOP == mPARSE_State)
     {
             memset((char *)&tCooker_Entity, 0, sizeof(Cooker_Parse_t));
@@ -206,20 +163,20 @@ void Master_data_Prase(int c)
 
 void GetMasterId(unsigned char *id)
 {
-  FLASH_ReadNByte(id,PARA_START_INDEX,FlASH_OPER_SIZE);
+  FLASH_ReadNByte((unsigned char *)id,PARA_START_INDEX,FlASH_OPER_SIZE);
 }
 
 unsigned int Slave_Load(Cooker_Parse_t *entity)
 {
-	unsigned int check = CRC_INITIAL;
+        unsigned int check = CRC_INITIAL;
 	unsigned int index = 0, count;
 	unsigned char id[COOKER_PARSE_ADDR_LEN];
 	char load[60];
 
-	load[index++] = COOKER_PARSE_HEADER;
-	check = crc16_ccitt_byte(check, COOKER_PARSE_HEADER);
-
 	GetMasterId(id);
+       // while(1);
+        load[index++] = COOKER_PARSE_HEADER;
+	check = crc16_ccitt_byte(check, COOKER_PARSE_HEADER);
 	for (count = 0; count < COOKER_PARSE_ADDR_LEN; count++)
 	{
 		load[index++] = id[count];
@@ -255,23 +212,23 @@ void Slave_WirelessSendLoad(char *load, unsigned int len)
 
 }
 
-void Gas_State_Load(unsigned char gas_state)
+void Slave_Send_GasState(void)
 {
       Cooker_Parse_t entity;
 
       entity.cmd	= eCOOKER_STATE_Gas;
-      entity.payload[0]	= gas_state;
+      entity.payload[0]	= Gas_Pressure_state;
       entity.length		= 1;
 
       Slave_Load(&entity);
 }
 
-void Bat_State_Load(unsigned char gas_state)
+void Slave_Send_BatState(void)
 {
       Cooker_Parse_t entity;
 
       entity.cmd	= eCOOKER_STATE_Bat;
-      entity.payload[0]	= gas_state;
+      entity.payload[0]	= Bat_Check_state;
       entity.length		= 1;
 
       Slave_Load(&entity);

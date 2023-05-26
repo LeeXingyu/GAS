@@ -26,7 +26,7 @@
 void HardWare_Init(void); 
 void LowPowerStart(void);
 void LowPowerStop(void);
-void StandyFun(void);
-void Gas_CheckFun(void);
+void Slave_Service(void);
+void FirstPower_CheckService(void);
 
 #endif

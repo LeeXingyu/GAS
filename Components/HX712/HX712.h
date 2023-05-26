@@ -20,9 +20,9 @@
 #define GAS_thresholdH  14000000    //大于14000000 即高气压
 #define GAS_thresholdL  13000000    //小于13000000 即低气压
 
-#define GAS_HIGH   (0XAA)
-#define GAS_NORMAL (0X55)
-#define GAS_BAT_LOW    (0XCC)
+#define GAS_BAT_HIGH   (0XAA)
+#define GAS_NORMAL (0XCC)
+#define GAS_BAT_LOW  (0X55)
 
 #define HX712_GPIO_PORT  GPIOD
 #define HX712_CLK_PINS  GPIO_Pin_3
@@ -40,7 +40,7 @@
 
 void HX712_GPIO_INIT (void);
 unsigned char tx_ReadCount(void);
-void tx_ReadVoltage(void);
+unsigned char tx_ReadVoltage(void);
 void HX712_Init_Mode(INT8U Mode);
 #endif
 

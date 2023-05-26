@@ -26,7 +26,7 @@
 #define   COOKER_PARSE_EXT  extern
 #endif
 
-#define COOKER_PARSE_HEADER			'C'
+#define COOKER_PARSE_HEADER			0x43
 #define COOKER_PARSE_ADDR_LEN			12
 #define COOKER_PARSE_PAYLOAD_LEN		30
 
@@ -70,8 +70,8 @@ void GetMasterId(unsigned char *id);
 unsigned int Slave_Load(Cooker_Parse_t *entity);
 void Slave_WirelessSendLoad(char *load, unsigned int len);
 //发送数据
-void Gas_State_Load(unsigned char gas_state);
-void Bat_State_Load(unsigned char gas_state);
+void Slave_Send_GasState(void);
+void Slave_Send_BatState(void);
 //实现主机要求的功能函数
 void Cooker_AFN_Handle(Cooker_Parse_t *entity);
 
