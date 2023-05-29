@@ -104,6 +104,46 @@ void USART_SendStr(unsigned char *Str)
 }
 
 
+int putchar(int c)
+{
+  if('\n' == (char)c)
+  {
+    USART_SendData8(USART1, '\r');
+    while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+  }
+  USART_SendData8(USART1, c);
+  while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);
+ 
+  return (c);
+}
+ 
+void uart_send(char *buf, int len)
+{
+  int i;
+  /*把要发送的数据放入缓冲区，然后将缓冲区的数据发送到寄存器DR*/
+  for(i=0; i<len; i++)
+  {
+    USART1->DR = (unsigned char)buf[i];
+    /*用于检查串口UART1是否发送完成，完成时，TC中断标志置位，退出轮询等待*/
+    while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);  
+  }
+}
+ 
+int uart_getchar(void)
+{
+  int c;
+ 
+  /* 循环，直到读取数据寄存器标志被设置 */
+  while (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);  
+  c = USART_ReceiveData8(USART1); 
+ 
+  /* 返回接收的数据 */
+   USART_SendData8(USART1, c); 
+   while (USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET);    
+ 
+  return (c);   
+}
+
 /*--------------------------------------------------------------------------------------------------------
                                                        0ooo
                                                 ooo0     (   )

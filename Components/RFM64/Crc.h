@@ -11,8 +11,8 @@
 
 #define     CRC_INITIAL                 0xFFFF                  //Initial FCS value
 #define     CHECK_SUM                   0xF0B8                  //Good final FCS value
-
-unsigned int crc16_ccitt_byte(unsigned int check, unsigned char dat);
+//#define     CHECK_SUM                   0x0000                  //Good final FCS value
+unsigned short int crc16_ccitt_byte(unsigned int check, unsigned char dat);
 unsigned int crc16_ccitt_block(unsigned char *buf, unsigned int check, unsigned int len);
 
 BOOLEAN cmp_buf(const char * const soc, const char *const dest, INT32U len);

@@ -1,6 +1,6 @@
 #include "Crc.h"
 
-static  INT16U  crc16_ccitt_table[256] =
+const static INT16U  crc16_ccitt_table[256] =
 {
 	0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
 	0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
@@ -38,13 +38,13 @@ static  INT16U  crc16_ccitt_table[256] =
 
 /****************************************************************************************
 * oˉêy??3?: crc16_ccitt_byte()
-* 1|?ü?èê?: crc16单字节校验
+* 1|?ü?èê?: crc16单字节校验 CRC16-X25
 * è??ú2?êy: 校准初始值 需要校准的数据
 * 3??ú2?êy: 
 * ·μ???μ  : 
 * ???ü    : 校准结果
 ****************************************************************************************/
-unsigned int crc16_ccitt_byte(unsigned int check, unsigned char dat)
+unsigned short int crc16_ccitt_byte(unsigned int check, unsigned char dat)
 {
 	//uint8 i;
 
@@ -55,8 +55,21 @@ unsigned int crc16_ccitt_byte(unsigned int check, unsigned char dat)
 	//}
 
 	//return (check);
-
+        //CRC16-X25
 	check = (check >> 8) ^ crc16_ccitt_table[(check ^ dat) & 0xFF];
+  
+  //CRC16-modus
+//        unsigned int j, tmp;
+//        check ^= dat;
+//        for (j = 0; j < 8; j++)
+//        {
+//            tmp = (unsigned int)(check & 0x0001);
+//            check >>= 1;
+//            if (tmp == 1)
+//            {
+//                check ^= 0xA001;    //异或多项式
+//            }
+//        }
 
 	return (check);
 }

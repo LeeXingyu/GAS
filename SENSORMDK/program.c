@@ -55,8 +55,8 @@ static void Bat_Check(void)
 void HardWare_Init(void)
 {
       //TEST
- //     Usart_Init();//初始化串口  
- //     Usart1_clear_init();//串口BUF初始化 
+      Usart_Init();//初始化串口  
+      Usart1_clear_init();//串口BUF初始化 
 
       TEV_GPIO_INIT();//初始化电磁阀检测和开关  
       TEV_CTRL_INIT();
@@ -131,7 +131,8 @@ void LowPowerStop(void)
     Active_Halt_Open();
     //初始化定时器 
     TIM3_Init();  
-
+      Usart_Init();//初始化串口  
+      Usart1_clear_init();//串口BUF初始化 
     SetRFMode( RF_SLEEP ); 
     delay_ms(8);
     Check_flag = 0; 

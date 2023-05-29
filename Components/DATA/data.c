@@ -14,6 +14,7 @@ typedef enum _Slave_State_e
 	eCOOKER_PARSE_CMD,
 	eCOOKER_PARSE_PAYLOAD,
 	eCOOKER_PARSE_CHECK,
+        eCOOKER_PARSE_END,
 }Slave_State_e;
 /* 自定义宏 */
 static void MasterParse_Nop(int c);
@@ -27,14 +28,12 @@ static void MasterParse_Check(int c);
 /* 全局变量定义 */
 data_buf data;
 static Cooker_Parse_t	tCooker_Entity;
-static Slave_State_e	mPARSE_State		= eCOOKER_PARSE_NOP;
+static Slave_State_e	mPARSE_State = eCOOKER_PARSE_NOP;
 static unsigned int	usCooker_ParseLength= 0;
-static unsigned int	usCooker_ParseCheck = CRC_INITIAL;
-
+static unsigned long int	usCooker_ParseCheck = CRC_INITIAL;
 unsigned char Gas_Pressure_state = 0;
 unsigned char Bat_Check_state = 0;
-
-unsigned char UID_data[12];
+unsigned char Test_data[18] = {0x43,0x24,0x00,0x1c,0x00,0x03,0xff,0xff,0x36,0x39,0x31,0x52,0x4e,0x00,0x01,0xff,0xff};
 
 static void (*const a_pfnCooker_Parse[])(int c) =
 {
@@ -49,7 +48,7 @@ static void (*const a_pfnCooker_Parse[])(int c) =
 
 static void MasterParse_Nop(int c)
 {
-
+  c = c;
 }
 
 static void MasterParse_Header(int c)
@@ -102,50 +101,67 @@ static void MasterParse_Payload(int c)
 
 static void MasterParse_Check(int c)
 {
-        usCooker_ParseLength++;
-	if (++usCooker_ParseLength >= 2)
-	{
-	    usCooker_ParseLength = 0;
+    c = c;
+    
+    usCooker_ParseLength++;
+    if (usCooker_ParseLength >= 2)
+    {
+        usCooker_ParseLength = 0;
+        mPARSE_State = eCOOKER_PARSE_END;
+        if(CHECK_SUM == usCooker_ParseCheck)
+        {
             if ((unsigned char)eCOOKER_SET_SYS_ID != tCooker_Entity.cmd)
             //if (0X01 != tCooker_Entity.cmd)
             {
-                unsigned char id[COOKER_PARSE_ADDR_LEN];
-
+                unsigned char id[FlASH_OPER_SIZE];
                 GetMasterId(id);
 
                 if (cmp_buf((char *)id, (char *)tCooker_Entity.addr, COOKER_PARSE_ADDR_LEN))
+                {
                     Cooker_AFN_Handle(&tCooker_Entity);
+                }
             }
             else
             {   
               Cooker_AFN_Handle(&tCooker_Entity);               
             }
-            mPARSE_State++;//放在这里会重启
-	}
+        }       
+         printf("\n eCOOKER_PARSE_END end \n");
+    }
 }
 
 void Rcv_MasterDataParse(void)
 {
 	unsigned char rc = ERROR;
 	unsigned int count;
-
+        memset(RF_Pkt.fill,0,40);
+        RF_Pkt.key =  0;
+        usCooker_ParseCheck = CRC_INITIAL;
 	ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
 	if(rc == OK)
 	{
 		count = 0;
 		while (count < RF_Pkt.key)
 		{
-			Master_data_Prase(RF_Pkt.fill[count]);
+			Master_data_Prase(RF_Pkt.fill[count]);                        
+                        printf("\ncount  %d\n",count);
 			count++;
+                        printf("\ncount2  %d\n",count);
+                        
 		}
 	}
+
 }
 
 void Master_data_Prase(int c)
 {
+    static unsigned int delay;
     if (mPARSE_State > eCOOKER_PARSE_CHECK)
             mPARSE_State = eCOOKER_PARSE_NOP;
-    
+    printf("\n 1 end \n");
+    if ((mPARSE_State == eCOOKER_PARSE_END)&& ((Cooker_TimeGet() - delay) > 500))
+        mPARSE_State = eCOOKER_PARSE_NOP;
+    printf("\n 2 end \n");
     if (eCOOKER_PARSE_NOP == mPARSE_State)
     {
             memset((char *)&tCooker_Entity, 0, sizeof(Cooker_Parse_t));
@@ -155,10 +171,13 @@ void Master_data_Prase(int c)
 
             mPARSE_State = eCOOKER_PARSE_HEADER;
     }
-
+    printf("\n 3 end \n");
+    delay = Cooker_TimeGet();
     usCooker_ParseCheck = crc16_ccitt_byte(usCooker_ParseCheck, c);
-
+    printf("\n 4 end \n");
     a_pfnCooker_Parse[mPARSE_State](c);
+    printf("\n 5 end \n");
+    
 }
 
 void GetMasterId(unsigned char *id)
@@ -170,7 +189,7 @@ unsigned int Slave_Load(Cooker_Parse_t *entity)
 {
         unsigned int check = CRC_INITIAL;
 	unsigned int index = 0, count;
-	unsigned char id[COOKER_PARSE_ADDR_LEN];
+	unsigned char id[FlASH_OPER_SIZE];
 	char load[60];
 
 	GetMasterId(id);

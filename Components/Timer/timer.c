@@ -1,7 +1,9 @@
 #include "timer.h"
 
-int Rfm_Times = 8;  //0.25*4
+int Timer_times = 8;  //0.25*4
 int  Check_flag = 0;
+int Rfm_Timer = 0;
+static volatile unsigned int    usSystemTick = 0;
 /*********************************************************
 函数功能：定时器3初始化
 函数名称：TIM3_Init
@@ -25,15 +27,21 @@ void TIM3_Init(void)
 **********************************************************/
 void TIM3_Handle(void)
 {
-  if(Rfm_Times != 0)
+  if(Timer_times != 0)
   {
-    Rfm_Times-- ;
+    Timer_times-- ;
   }
   else 
   {
-    Check_flag ++;
-    Rfm_Times = 8;
+    Check_flag++;
+    Timer_times = 8;
+    Rfm_Timer = 1;
+    usSystemTick++;
   }
 }
 
+uint16_t Cooker_TimeGet(void)
+{
+	return usSystemTick;
+}
 

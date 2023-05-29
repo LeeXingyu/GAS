@@ -21,6 +21,8 @@
 #define countof(a)   (sizeof(a) / sizeof(*(a)))
 #define RxBufferSize 50
 #define TxBufferSize 120
+#define BAUDRATE 115200
+#define SIZE 128
 typedef struct tag_uart{
 
 	unsigned char rx_data[RxBufferSize];
@@ -31,6 +33,15 @@ typedef struct tag_uart{
 
 extern uart usart1;
 
+ 
+/*定义一个结构体，存放串口相关变量*/
+typedef struct uart_rxbuf_s
+{
+  uint8_t               buf[SIZE];  /* 串口接收数据的buffer*/
+  uint32_t              len;      /* 数据的长度 */
+}uart_rxbuf_t;
+ 
+extern uart_rxbuf_t  g_uart_rxbuf;  /*定义一个结构体变量g_uart_rxbuf，会用以访问结构体里的成员*/
 
 /* 声明给外部使用的变量 */
 
@@ -86,6 +97,7 @@ void USART_SendStr(unsigned char *Str);
  ******************************************************************************/
 //u8 USART_ReceiveByte(void);
 
+extern int uart_getchar(void);/*接收*/
 /*******************************************************************************
  * 名称: fputc
  * 功能: 重定向c库函数printf到UART1

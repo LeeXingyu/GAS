@@ -11,5 +11,5 @@
 
 void TIM3_Init(void);
 void TIM3_Handle(void);
-
+uint16_t Cooker_TimeGet(void);
 #endif

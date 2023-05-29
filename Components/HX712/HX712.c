@@ -85,7 +85,6 @@ void HX712_Init_Mode(INT8U Mode)
   HX712_CLK_L();
   while(DOUT_Level()){};
   //AD转换是否完成
-  while(DOUT_Level()){};
   
   for (i=0;i<Mode-1;i++)
   {

@@ -64,9 +64,9 @@ void Cooker_AFN_Handle(Cooker_Parse_t *entity)
         }
         break;
 
-        default:
+        default:SlaveGasCTRL = 1;
             break;
-       }
+    }
 }
 
 void Cooker_SendSetIdResult(void)
@@ -94,7 +94,6 @@ void Cooker_SendGas_CTRL(void)
     SlaveGasCTRL = 0;
     //关闭气阀
     QA_PowerH();//关闭电磁阀
-    while(1);
     if(!READ_Level())
     {
        delay_ms(6);
