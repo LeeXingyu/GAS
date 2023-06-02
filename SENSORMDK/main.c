@@ -46,30 +46,27 @@ int main(void)
       //只使用了内部晶振
       CLK_Config(CLK_SYSCLKSource_HSI);//初始化系统时钟 LSI      
       HardWare_Init();      
-      //FirstPower_CheckService();
-      TIM3_Init();  
+      FirstPower_CheckService();
+      //TIM3_Init();  
       while(1)
       { 
           
-//        if(Power_CurState)
-//        {   
-//          Power_PreState = Power_CurState;
-          //不关闭定时器  0.25s进入
+        if(Power_CurState)
+        {   
+          Power_PreState = Power_CurState;
+          //不关闭定时器  2.35s定时进入
           if(Rfm_Timer == 1)
           {
               CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
               printf("\n times\n");
-              
               Rcv_MasterDataParse();                
               Rfm_Timer = 0;             
               CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
          }
-//          //10s定时进入  以及 接收到数据进入
-          if((Check_flag >= 5) || SlaveGasCTRL)
+////      //10s定时进入  以及 接收到数据进入
+          if((Check_flag >= 4) || SlaveGasCTRL)
           {             
              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
-             SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_19200_MSB);
-	     SpiWriteCfg(REG_BITRATE_LSB, RF_BIRATE_19200_LSB);
              Timer_times = 8;
              Check_flag = 0;
              
@@ -114,15 +111,14 @@ int main(void)
                     break;
               }   
              printf("\n Timerend \n");
-
             CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
          }         
-//      }
-//        else
-//        {          
-//          LowPowerStart();
-//          LowPowerStop();
-//        }
+      }
+        else
+        {          
+          LowPowerStart();
+          LowPowerStop();
+        }
 
         
       }     

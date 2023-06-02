@@ -27,7 +27,7 @@
             <file>$PROJ_DIR$\Debug\Obj\stm8l15x_tim1.o</file>
             <file>$PROJ_DIR$\..\STM8L15x_StdPeriph_Driver\src\stm8l15x_gpio.c</file>
             <file>$PROJ_DIR$\..\STM8L15x_StdPeriph_Driver\src\stm8l15x_tim1.c</file>
-            <file>$PROJ_DIR$\..\Components\MyTypeDef.h</file>
+            <file>$PROJ_DIR$\..\Components\mytypedef.h</file>
             <file>$PROJ_DIR$\..\STM8L15x_StdPeriph_Driver\src\stm8l15x_pwr.c</file>
             <file>$PROJ_DIR$\..\Components\RFM64\Rfm64.c</file>
             <file>$PROJ_DIR$\..\system\delay.c</file>
@@ -869,7 +869,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 36 137 39 207 96 91 2 54 76 93 75 61 120 97 202 35 146 156 46 102 168 119 184 22 145 31 199 198 161 177 98 195 101 86 154 110 44 74 164 56 197 193 169 153 163 51 112 79 84 187 148 108 82 66 111 160 60 94 176 114 181 170 186 206 49 125</file>
+                    <file> 91 154 148 44 22 153 75 168 119 36 111 31 39 184 145 51 84 82 76 206 207 54 97 169 163 112 79 187 108 66 160 137 120 176 94 35 74 164 56 110 197 193 2 199 146 198 161 156 177 96 98 46 195 93 101 102 61 60 86 202 125 114 181 170 186 49</file>
                 </tool>
             </inputs>
         </file>
@@ -1112,7 +1112,7 @@
                 </tool>
                 <tool>
                     <name>BICOMP</name>
-                    <file> 181 154 31 51 82 184 84 75 76 170 94 137 145 153 36 148 111 91 186 44 207 169 163 112 79 187 108 66 160 120 193 61 60 119 176 97 86 35 2 199 146 198 161 156 177 96 98 46 195 93 101 168 110 22 102 202 206 49 125</file>
+                    <file> 154 207 187 169 75 36 112 66 31 76 91 186 44 163 79 108 160 181 170 94 137 184 145 153 51 84 148 82 111 120 193 61 60 119 176 97 86 35 2 199 146 198 161 156 177 96 98 46 195 93 101 168 110 22 102 202 206 49 125</file>
                 </tool>
             </inputs>
         </file>

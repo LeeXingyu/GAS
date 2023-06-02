@@ -33,8 +33,9 @@ static unsigned int	usCooker_ParseLength= 0;
 static unsigned long int	usCooker_ParseCheck = CRC_INITIAL;
 unsigned char Gas_Pressure_state = 0;
 unsigned char Bat_Check_state = 0;
-unsigned char Test_data[18] = {0x43,0x24,0x00,0x1c,0x00,0x03,0xff,0xff,0x36,0x39,0x31,0x52,0x4e,0x00,0x01,0xff,0xff};
 unsigned char Awaken = 0;
+unsigned char  CheckID = 0;
+
 static void (*const a_pfnCooker_Parse[])(int c) =
 {
 	MasterParse_Nop,
@@ -53,8 +54,8 @@ static void Updata_Awaken_Config(void)
 	SpiWriteCfg(REG_SYNCBYTE3,0xAA);
 	SpiWriteCfg(REG_SYNCBYTE4,0xAA);
 
-	SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_200_MSB);
-	SpiWriteCfg(REG_BITRATE_LSB,RF_BIRATE_200_LSB);
+//	SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_200_MSB);
+//	SpiWriteCfg(REG_BITRATE_LSB,RF_BIRATE_200_LSB);
 
 }
 
@@ -65,8 +66,8 @@ static void Updata_Normal_Config(void)
 	SpiWriteCfg(REG_SYNCBYTE3,SYNC_WORD3);
 	SpiWriteCfg(REG_SYNCBYTE4,SYNC_WORD4);
 
-	SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_19200_MSB);
-	SpiWriteCfg(REG_BITRATE_LSB, RF_BIRATE_19200_LSB);
+//	SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_19200_MSB);
+//	SpiWriteCfg(REG_BITRATE_LSB, RF_BIRATE_19200_LSB);
 }
 
 static void MasterParse_Nop(int c)
@@ -81,7 +82,6 @@ static void MasterParse_Header(int c)
 	else
         {
           mPARSE_State = eCOOKER_PARSE_NOP;
-          Awaken = 1;
         }
 }
 
@@ -163,7 +163,10 @@ void Rcv_MasterDataParse(void)
 	unsigned int count;
         unsigned int times = 100;
         
-        Updata_Awaken_Config();
+        if(CheckID)
+        {
+          Updata_Awaken_Config();
+        }
 Rece:
           memset(RF_Pkt.fill,0,40);
           RF_Pkt.key =  0;
@@ -171,21 +174,18 @@ Rece:
           RF_Pkt.counter =  0;
           usCooker_ParseCheck = CRC_INITIAL;
           ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
-          //printf("\n ReceiveRfFrame\n");
           if(rc == OK)
           {
-              
               count = 0;
+              //判断是否为唤醒数据
               if(40 < RF_Pkt.key || RF_Pkt.key == 0)
               {
                 printf("\n 1\n");
                 RF_Pkt.key = 1;  
-                times = 2500;
-                //delay_ms(100);
+                times = 2000;
                 Updata_Normal_Config();
-                //delay_ms(100);
               }
-              while (count < RF_Pkt.key)
+              while (count < RF_Pkt.key && (RF_Pkt.key != 1))
               {
                       Master_data_Prase(RF_Pkt.fill[count]);                                                
                       count++;                                             
@@ -208,8 +208,11 @@ Rece:
           }
           else 
           {
-            Awaken = 0;
-            //Updata_Normal_Config();
+            Awaken = 0;            
+          }
+          if(Awaken == 0)
+          {
+            Updata_Normal_Config();         
           }
 }
 

@@ -189,7 +189,7 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
  
   if(READ_Level())
   {
-    delay_ms(10);
+    delay_ms(20);
     if(READ_Level())
     {
       // 气体阀打开

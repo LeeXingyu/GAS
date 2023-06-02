@@ -9,7 +9,7 @@ extern unsigned int BatCheck_Flag;
 extern unsigned short Power_PreState;
 extern unsigned short  Power_CurState;
 extern unsigned short SlaveSendSetIdResult;
-
+extern unsigned char  CheckID;
 //待机模式 功能实现
 static void Gas_Check(void)
 {            
@@ -77,26 +77,28 @@ void HardWare_Init(void)
 void FirstPower_CheckService(void)
 {
     unsigned char id[FlASH_OPER_SIZE];
-    long int timeout = 180000;
-            
+    long int timeout = 180000;       
     //对码 
     GetMasterId(id);
-    if(id[0] == 0x24 && id[2] == 0x1C)
+    if(id[0] != 0x24 && id[2] != 0x1C)
     {
+      CheckID = 0;
       while((0 != timeout )&&(!SlaveSendSetIdResult))
       {
         Rcv_MasterDataParse();
         timeout--;
         delay_ms(1);    
       }
-       Cooker_SendSetIdResult();
+      Cooker_SendSetIdResult();
+      CheckID = 1;
       delay_ms(10);
     }
     else
     {
-    //电池检测
-    Bat_Check();
-    Slave_Send_BatState();
+      CheckID = 1;
+      //电池检测
+      Bat_Check();
+      Slave_Send_BatState();
     }
 
 }
