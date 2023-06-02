@@ -33,9 +33,10 @@ void TIM3_Handle(void)
   }
   else 
   {
+    Rfm_Timer++;
     Check_flag++;
     Timer_times = 8;
-    Rfm_Timer = 1;
+    
     usSystemTick++;
   }
 }

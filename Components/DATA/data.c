@@ -161,8 +161,8 @@ void Rcv_MasterDataParse(void)
 {
 	unsigned char rc = ERROR;
 	unsigned int count;
-        unsigned int times = 100;
-        
+        unsigned int times = 400;
+        //CheckID = 1;//关闭对码时打开
         if(CheckID)
         {
           Updata_Awaken_Config();
@@ -182,7 +182,7 @@ Rece:
               {
                 printf("\n 1\n");
                 RF_Pkt.key = 1;  
-                times = 2000;
+                times = 10000;
                 Updata_Normal_Config();
               }
               while (count < RF_Pkt.key && (RF_Pkt.key != 1))

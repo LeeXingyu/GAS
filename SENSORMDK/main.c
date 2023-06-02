@@ -28,14 +28,14 @@ uint8_t rst_data = 0;
 
 enum
 {
-    n_SystemTask,
-    n_IDTaskSend,
+    n_IDTaskSend,    
     n_CtrlGasTask,
+    n_SystemTask,
     n_GasTransmit,    
     n_BatTransmit
 };
 
-static volatile unsigned char D_SystemRun;
+static volatile unsigned char D_SystemRun = 0;
 
 int main(void)
 {  
@@ -50,40 +50,43 @@ int main(void)
       //TIM3_Init();  
       while(1)
       { 
+    
           
         if(Power_CurState)
         {   
           Power_PreState = Power_CurState;
           //不关闭定时器  2.35s定时进入
-          if(Rfm_Timer == 1)
-          {
-              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
-              printf("\n times\n");
-              Rcv_MasterDataParse();                
-              Rfm_Timer = 0;             
-              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
-         }
+          
 ////      //10s定时进入  以及 接收到数据进入
-          if((Check_flag >= 4) || SlaveGasCTRL)
-          {             
+          if((Check_flag >= 4))
+          {  
+            
              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
              Timer_times = 8;
              Check_flag = 0;
+             Rfm_Timer = 0; 
+
+             printf("\n times\n");
+             Rcv_MasterDataParse();                
              
              switch(D_SystemRun)
-             {
-                 case n_SystemTask: // 系统任务
-                {   
-                   Slave_Service();
-                    D_SystemRun = n_IDTaskSend;
-                }
-                
+             {               
                 case n_IDTaskSend:
                 {
                    // Cooker_SendSetIdResult();
+                    D_SystemRun = n_CtrlGasTask;
+                }
+                case n_CtrlGasTask:
+                {
+                  //接收关闭指令时 发送
+                    Cooker_SendGas_CTRL();
+                    D_SystemRun = n_SystemTask;
+                } 
+                case n_SystemTask: // 检测服务
+                {   
+                   Slave_Service();
                     D_SystemRun = n_GasTransmit;
                 }
-                                
                 case n_GasTransmit:
                 {
                     Slave_Send_GasState();
@@ -96,23 +99,17 @@ int main(void)
                   {
                     Slave_Send_BatState();
                    }
-                    D_SystemRun = n_CtrlGasTask;                  
-                }
-                 case n_CtrlGasTask:
-                {
-                  //接收关闭指令时 发送
-                    Cooker_SendGas_CTRL();
-                    D_SystemRun = n_SystemTask;
-                }
+                    D_SystemRun = n_IDTaskSend;                  
+                } 
                 break;
-
                 default: // 系统时间异常
-                    D_SystemRun = n_SystemTask;
+                    D_SystemRun = n_IDTaskSend;
                     break;
               }   
              printf("\n Timerend \n");
             CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
-         }         
+         } 
+
       }
         else
         {          
