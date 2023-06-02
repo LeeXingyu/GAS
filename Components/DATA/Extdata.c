@@ -94,6 +94,8 @@ void Cooker_SendGas_CTRL(void)
     SlaveGasCTRL = 0;
     //关闭气阀
     QA_PowerH();//关闭电磁阀
+    delay_ms(100);
+    QA_PowerL();//关闭电磁阀
     if(!READ_Level())
     {
        delay_ms(6);
@@ -106,6 +108,7 @@ void Cooker_SendGas_CTRL(void)
         Slave_Load(&entity);             
        }
     }
+    printf("\n Cooker_SendGas_CTRL \n");
   }
 }
 

@@ -34,7 +34,7 @@ static unsigned long int	usCooker_ParseCheck = CRC_INITIAL;
 unsigned char Gas_Pressure_state = 0;
 unsigned char Bat_Check_state = 0;
 unsigned char Test_data[18] = {0x43,0x24,0x00,0x1c,0x00,0x03,0xff,0xff,0x36,0x39,0x31,0x52,0x4e,0x00,0x01,0xff,0xff};
-
+unsigned char Awaken = 0;
 static void (*const a_pfnCooker_Parse[])(int c) =
 {
 	MasterParse_Nop,
@@ -46,6 +46,29 @@ static void (*const a_pfnCooker_Parse[])(int c) =
 	MasterParse_Check,
 };
 
+static void Updata_Awaken_Config(void)
+{
+	SpiWriteCfg(REG_SYNCBYTE1,0xAA);
+	SpiWriteCfg(REG_SYNCBYTE2,0xAA);
+	SpiWriteCfg(REG_SYNCBYTE3,0xAA);
+	SpiWriteCfg(REG_SYNCBYTE4,0xAA);
+
+	SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_200_MSB);
+	SpiWriteCfg(REG_BITRATE_LSB,RF_BIRATE_200_LSB);
+
+}
+
+static void Updata_Normal_Config(void)
+{
+	SpiWriteCfg(REG_SYNCBYTE1,SYNC_WORD1);
+	SpiWriteCfg(REG_SYNCBYTE2,SYNC_WORD2);
+	SpiWriteCfg(REG_SYNCBYTE3,SYNC_WORD3);
+	SpiWriteCfg(REG_SYNCBYTE4,SYNC_WORD4);
+
+	SpiWriteCfg(REG_BITRATE_MSB,RF_BIRATE_19200_MSB);
+	SpiWriteCfg(REG_BITRATE_LSB, RF_BIRATE_19200_LSB);
+}
+
 static void MasterParse_Nop(int c)
 {
   c = c;
@@ -56,7 +79,10 @@ static void MasterParse_Header(int c)
 	if ((unsigned char)COOKER_PARSE_HEADER == (unsigned char)c)
 		mPARSE_State = eCOOKER_PARSE_ADDR;
 	else
-		mPARSE_State = eCOOKER_PARSE_NOP;
+        {
+          mPARSE_State = eCOOKER_PARSE_NOP;
+          Awaken = 1;
+        }
 }
 
 static void MasterParse_Addr(int c)
@@ -125,6 +151,7 @@ static void MasterParse_Check(int c)
             {   
               Cooker_AFN_Handle(&tCooker_Entity);               
             }
+            Awaken = 2;
         }       
          printf("\n eCOOKER_PARSE_END end \n");
     }
@@ -134,23 +161,56 @@ void Rcv_MasterDataParse(void)
 {
 	unsigned char rc = ERROR;
 	unsigned int count;
-        memset(RF_Pkt.fill,0,40);
-        RF_Pkt.key =  0;
-        usCooker_ParseCheck = CRC_INITIAL;
-	ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
-	if(rc == OK)
-	{
-		count = 0;
-		while (count < RF_Pkt.key)
-		{
-			Master_data_Prase(RF_Pkt.fill[count]);                        
-                        printf("\ncount  %d\n",count);
-			count++;
-                        printf("\ncount2  %d\n",count);
-                        
-		}
-	}
-
+        unsigned int times = 100;
+        
+        Updata_Awaken_Config();
+Rece:
+          memset(RF_Pkt.fill,0,40);
+          RF_Pkt.key =  0;
+          RF_Pkt.test_id =  0;
+          RF_Pkt.counter =  0;
+          usCooker_ParseCheck = CRC_INITIAL;
+          ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+          //printf("\n ReceiveRfFrame\n");
+          if(rc == OK)
+          {
+              
+              count = 0;
+              if(40 < RF_Pkt.key || RF_Pkt.key == 0)
+              {
+                printf("\n 1\n");
+                RF_Pkt.key = 1;  
+                times = 2500;
+                //delay_ms(100);
+                Updata_Normal_Config();
+                //delay_ms(100);
+              }
+              while (count < RF_Pkt.key)
+              {
+                      Master_data_Prase(RF_Pkt.fill[count]);                                                
+                      count++;                                             
+              }
+          }
+          //ÅÐ¶ÏÊÇ·ñ³¬Ê±
+          if(times > 0)
+          {
+            //ÅÐ¶ÏÊÇ·ñ¼ì²â³É¹¦
+            if(Awaken == 2)
+            {
+              Awaken = 0;           
+            }
+            else 
+            {
+              times--;
+              delay_ms(1);
+              goto Rece;           
+            }          
+          }
+          else 
+          {
+            Awaken = 0;
+            //Updata_Normal_Config();
+          }
 }
 
 void Master_data_Prase(int c)
@@ -158,10 +218,10 @@ void Master_data_Prase(int c)
     static unsigned int delay;
     if (mPARSE_State > eCOOKER_PARSE_CHECK)
             mPARSE_State = eCOOKER_PARSE_NOP;
-    printf("\n 1 end \n");
+
     if ((mPARSE_State == eCOOKER_PARSE_END)&& ((Cooker_TimeGet() - delay) > 500))
         mPARSE_State = eCOOKER_PARSE_NOP;
-    printf("\n 2 end \n");
+
     if (eCOOKER_PARSE_NOP == mPARSE_State)
     {
             memset((char *)&tCooker_Entity, 0, sizeof(Cooker_Parse_t));
@@ -171,12 +231,12 @@ void Master_data_Prase(int c)
 
             mPARSE_State = eCOOKER_PARSE_HEADER;
     }
-    printf("\n 3 end \n");
+
     delay = Cooker_TimeGet();
     usCooker_ParseCheck = crc16_ccitt_byte(usCooker_ParseCheck, c);
-    printf("\n 4 end \n");
+
     a_pfnCooker_Parse[mPARSE_State](c);
-    printf("\n 5 end \n");
+
     
 }
 
@@ -193,7 +253,6 @@ unsigned int Slave_Load(Cooker_Parse_t *entity)
 	char load[60];
 
 	GetMasterId(id);
-       // while(1);
         load[index++] = COOKER_PARSE_HEADER;
 	check = crc16_ccitt_byte(check, COOKER_PARSE_HEADER);
 	for (count = 0; count < COOKER_PARSE_ADDR_LEN; count++)
@@ -233,6 +292,7 @@ void Slave_WirelessSendLoad(char *load, unsigned int len)
 
 void Slave_Send_GasState(void)
 {
+      
       Cooker_Parse_t entity;
 
       entity.cmd	= eCOOKER_STATE_Gas;
@@ -240,6 +300,7 @@ void Slave_Send_GasState(void)
       entity.length		= 1;
 
       Slave_Load(&entity);
+      printf("\n Slave_Send_GasState \n");
 }
 
 void Slave_Send_BatState(void)

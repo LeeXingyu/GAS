@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>1793626332</Checksum>
+        <Checksum>2043214871</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>1</FillEnabled>
@@ -29,20 +29,19 @@
         <GraphEnabled>0</GraphEnabled>
         <ShowTimeLog>1</ShowTimeLog>
     </DataSample>
+    <TermIOLog>
+        <LoggingEnabled>_ 0</LoggingEnabled>
+        <LogFile>_ ""</LogFile>
+    </TermIOLog>
     <Breakpoints>
         <Bp0>_ "STD_DATA" "read_IRQ_0" 0 0 0 3 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\program.c}.59.7" 1 0 0 0 "" 0 ""</Bp1>
-        <Count>2</Count>
+        <Count>1</Count>
     </Breakpoints>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
         <Category>_ 0</Category>
     </LogFile>
-    <TermIOLog>
-        <LoggingEnabled>_ 0</LoggingEnabled>
-        <LogFile>_ ""</LogFile>
-    </TermIOLog>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

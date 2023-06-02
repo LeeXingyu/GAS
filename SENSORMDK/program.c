@@ -76,20 +76,28 @@ void HardWare_Init(void)
  //第一次上电对码
 void FirstPower_CheckService(void)
 {
+    unsigned char id[FlASH_OPER_SIZE];
     long int timeout = 180000;
             
-    //对码   
-    while((0 != timeout )&&(!SlaveSendSetIdResult))
+    //对码 
+    GetMasterId(id);
+    if(id[0] == 0x24 && id[2] == 0x1C)
     {
-      Rcv_MasterDataParse();
-      timeout--;
-      delay_ms(1);    
+      while((0 != timeout )&&(!SlaveSendSetIdResult))
+      {
+        Rcv_MasterDataParse();
+        timeout--;
+        delay_ms(1);    
+      }
+       Cooker_SendSetIdResult();
+      delay_ms(10);
     }
-     Cooker_SendSetIdResult();
-    delay_ms(10);
+    else
+    {
     //电池检测
-//    Bat_Check();
-//    Slave_Send_BatState();
+    Bat_Check();
+    Slave_Send_BatState();
+    }
 
 }
 
@@ -131,8 +139,8 @@ void LowPowerStop(void)
     Active_Halt_Open();
     //初始化定时器 
     TIM3_Init();  
-      Usart_Init();//初始化串口  
-      Usart1_clear_init();//串口BUF初始化 
+    Usart_Init();//初始化串口  
+    Usart1_clear_init();//串口BUF初始化 
     SetRFMode( RF_SLEEP ); 
     delay_ms(8);
     Check_flag = 0; 

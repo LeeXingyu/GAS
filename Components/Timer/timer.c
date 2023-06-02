@@ -1,6 +1,6 @@
 #include "timer.h"
 
-int Timer_times = 8;  //0.25*4
+int Timer_times = 12;  //0.25*4
 int  Check_flag = 0;
 int Rfm_Timer = 0;
 static volatile unsigned int    usSystemTick = 0;
@@ -34,7 +34,7 @@ void TIM3_Handle(void)
   else 
   {
     Check_flag++;
-    Timer_times = 8;
+    Timer_times = 12;
     Rfm_Timer = 1;
     usSystemTick++;
   }

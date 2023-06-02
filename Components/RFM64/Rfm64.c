@@ -80,8 +80,8 @@ static const _SX1212_REG RegistersCfg[] = { // !!! user can reconfigure register
 
     {REG_FDEV, RF_FDEV_50},
 
-    {REG_BITRATE_MSB, RF_BIRATE_4800_MSB},
-    {REG_BITRATE_LSB, RF_BIRATE_4800_LSB},
+    {REG_BITRATE_MSB, RF_BIRATE_19200_MSB},
+    {REG_BITRATE_LSB, RF_BIRATE_19200_LSB},
 
     {REG_R1, RX_CENTER_FREQ_433MHZ_R},
     {REG_P1, RX_CENTER_FREQ_433MHZ_P},
@@ -105,7 +105,11 @@ static const _SX1212_REG RegistersCfg[] = { // !!! user can reconfigure register
     {REG_SYNCBYTE2, SYNC_WORD2},
     {REG_SYNCBYTE3, SYNC_WORD3},
     {REG_SYNCBYTE4, SYNC_WORD4},
-
+//    {REG_SYNCBYTE1, 0xAA},
+//    {REG_SYNCBYTE2, 0xAA},
+//    {REG_SYNCBYTE3, 0xAA},
+//    {REG_SYNCBYTE4, 0xAA},
+    
     {REG_TXPARAM, RF_TX_FC_200|RF_TX_POWER},
 
     {REG_OSCPARAM, RF_OSC_CLKOUT_OFF},
@@ -456,10 +460,9 @@ void ReceiveRfFrame (unsigned char *buffer, unsigned char len, unsigned char *rc
         SpiWriteCfg(REG_PKTPARAM4, RF_PKT4_FIFO_STANDBY_READ);  // allow read FIFO in standby mode
     }
     *rc = RF_RX_RUNNING;
-
+    
     if(RF_IRQ0()) {
         SetRFMode(RF_STANDBY);
-
         do {
             clr_NSS_DATA;                 // select "data register"
             *buffer++ = SpiInOut(0);
@@ -525,7 +528,7 @@ void ReceiveRfFrame (unsigned char *buffer, unsigned char len, unsigned char *rc
     if(RF_IRQ0()) {
         do {
             while(!RF_IRQ0());              // wait if FIFO is empty
-
+            
             clr_NSS_DATA;                 // select "data register"
             *buffer++ = SpiInOut(0);
             set_NSS_DATA;                 // pulse on data nss every byte
