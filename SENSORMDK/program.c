@@ -23,7 +23,7 @@ static void Gas_Check(void)
       {
           switch(tx_ReadCount())
           {
-                case GAS_BAT_LOW:Gas_check_Times = 0;Gas_Pressure_state = GAS_BAT_LOW;break;
+                case GAS_BAT_LOW:Gas_check_Times = 5;Gas_Pressure_state = GAS_BAT_LOW;break;
                 case GAS_BAT_HIGH:Gas_check_Times = 0;Gas_Pressure_state = GAS_BAT_HIGH;break;
                 case GAS_NORMAL:Gas_check_Times = 0;Gas_Pressure_state = GAS_NORMAL; break;
                 default:Gas_Pressure_state = 0;break;
@@ -32,7 +32,7 @@ static void Gas_Check(void)
       else 
       {
         Gas_check_Times--;
-        if(Gas_check_Times > 5)
+        if(Gas_check_Times <= 0)
           Gas_check_Times = 0;
       }
 }
@@ -46,7 +46,7 @@ static void Bat_Check(void)
       switch(tx_ReadVoltage())
       {
             case GAS_BAT_LOW:Bat_Check_state = GAS_BAT_LOW;break;
-            case GAS_BAT_HIGH:Bat_Check_state = GAS_BAT_HIGH;break;        
+            case GAS_BAT_HIGH:Bat_Check_state = GAS_BAT_HIGH;BatCheck_Flag = 0;break;        
             default:Bat_Check_state = 0;break;
       }
 }
@@ -110,7 +110,7 @@ void LowPowerStart(void)
     if(Power_PreState != Power_CurState)
     {
        Power_PreState = Power_CurState;
-       delay_ms(6);
+       delay_ms(20);
        if(!READ_Level())
        {//发送关闭气阀的指令
           Cooker_Parse_t entity;
@@ -159,7 +159,7 @@ void Slave_Service(void)
            Gas_Check();
         }
     }
-    if(21 <= BatCheck_Flag )
+    if((21 <= BatCheck_Flag) || (Bat_Check_state == GAS_BAT_LOW))
     {
       BatCheck_Flag = 0;
       Bat_Check();

@@ -55,10 +55,9 @@ int main(void)
         if(Power_CurState)
         {   
           Power_PreState = Power_CurState;
-          //不关闭定时器  2.35s定时进入
-          
-////      //10s定时进入  以及 接收到数据进入
-          if((Check_flag >= 4))
+          //不关闭定时器  2.35s定时进入          
+         //10s定时进入  以及 接收到数据进入
+          if((Rfm_Timer >= 4))
           {  
             
              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
@@ -107,7 +106,7 @@ int main(void)
                     break;
               }   
              printf("\n Timerend \n");
-            CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
+             CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
          } 
 
       }
