@@ -24,6 +24,7 @@ extern unsigned short  Power_CurState;
 extern unsigned int  BatCheck_Flag;
 extern unsigned short  SlaveGasCTRL;
 extern unsigned short SlaveSendSetIdResult;
+
 uint8_t rst_data = 0;
 
 enum
@@ -87,7 +88,7 @@ int main(void)
                     D_SystemRun = n_GasTransmit;
                 }
                 case n_GasTransmit:
-                {
+                {              
                     Slave_Send_GasState();
                     D_SystemRun = n_BatTransmit;
                 } 
@@ -96,6 +97,7 @@ int main(void)
                 {
                   if(BatCheck_Flag == 0)
                   {
+                    delay_ms(500);
                     Slave_Send_BatState();
                    }
                     D_SystemRun = n_IDTaskSend;                  

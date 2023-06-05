@@ -315,6 +315,7 @@ void Slave_Send_BatState(void)
       entity.length		= 1;
 
       Slave_Load(&entity);
+      printf("\n Slave_Send_BatState \n");
 }
 
 /*
