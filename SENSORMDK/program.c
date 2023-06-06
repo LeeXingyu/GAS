@@ -55,8 +55,8 @@ static void Bat_Check(void)
 void HardWare_Init(void)
 {
       //TEST
-      Usart_Init();//初始化串口  
-      Usart1_clear_init();//串口BUF初始化 
+//      Usart_Init();//初始化串口  
+//      Usart1_clear_init();//串口BUF初始化 
 
       TEV_GPIO_INIT();//初始化电磁阀检测和开关  
       TEV_CTRL_INIT();
@@ -81,7 +81,7 @@ void FirstPower_CheckService(void)
     long int timeout = 180000;       
     //对码   
     GetMasterId(id);
-    printf("\n id %d %d %d   \n",id[0],id[1],id[2]);
+    ////printf("\n id %d %d %d   \n",id[0],id[1],id[2]);
     if(id[0] != 0x24 && id[2] != 0x1C)
     {
       CheckID = 0;
@@ -94,11 +94,11 @@ void FirstPower_CheckService(void)
       Cooker_SendSetIdResult();
       CheckID = 1;
       delay_ms(10);
-      printf("\n GetMasterId \n");
+      ////printf("\n GetMasterId \n");
     }
     else
     {
-      printf("\n CheckID  1 \n");
+      ////printf("\n CheckID  1 \n");
       CheckID = 1;
       //电池检测
       Bat_Check();
@@ -111,7 +111,7 @@ void FirstPower_CheckService(void)
 //开启低功耗
 void LowPowerStart(void)
 { 
-     printf("\n LowPowerStart  1 \n");
+     //////printf("\n LowPowerStart  1 \n");
     //未接收到关闭气阀指令 关闭气阀上报
     if(Power_PreState != Power_CurState)
     {
@@ -128,8 +128,10 @@ void LowPowerStart(void)
     }
     //模块低功耗
     SetRFMode( RF_SLEEP );
+    delay_ms(8);
     QA_PowerL();
     HX712_CLK_H();
+    delay_ms(10);
     //关闭时钟
     Active_Halt_Colse();
     //状态位初始化
@@ -149,8 +151,8 @@ void LowPowerStop(void)
     Active_Halt_Open();
     //初始化定时器 
     TIM3_Init();  
-    Usart_Init();//初始化串口  
-    Usart1_clear_init();//串口BUF初始化 
+    //Usart_Init();//初始化串口  
+    //Usart1_clear_init();//串口BUF初始化 
     SetRFMode( RF_SLEEP ); 
     delay_ms(8);
     Check_flag = 0; 
@@ -165,14 +167,14 @@ void Slave_Service(void)
         if(READ_Level())
         {
            Gas_Check();
-           printf("\n Gas_Check \n");
+           ////printf("\n Gas_Check \n");
         }
     }
-    printf("\nBatCheck_Flag %d\n",BatCheck_Flag);
+    ////printf("\nBatCheck_Flag %d\n",BatCheck_Flag);
     if((21 <= BatCheck_Flag) || (Bat_Check_state == GAS_BAT_LOW))
     {
       BatCheck_Flag = 0;
       Bat_Check();
-      printf("\n Bat_Check  %d \n",Bat_Check_state);
+      ////printf("\n Bat_Check  %d \n",Bat_Check_state);
     }
 }

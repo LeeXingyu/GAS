@@ -59,10 +59,10 @@ static unsigned char SpiInOut (unsigned char val);
 #define _nop_spi()          // do nothing, use nop if needed
 
 
-#define DelayTS_OS()        delay_ms(3)			// 5ms
-#define DelayTS_FS()        delay_us(800)			// 800us
-#define DelayTS_RE()        delay_us(500)			// 500us
-#define DelayTS_TR()        delay_us(500)			// 500us
+#define DelayTS_OS()        delay_ms(3)			// 3ms
+#define DelayTS_FS()        delay_us(350)			// 350*3us
+#define DelayTS_RE()        delay_us(200)			// 200*3us
+#define DelayTS_TR()        delay_us(200)			// 200*3us
 
             // ======== static var  ======== //
 #define DEF_MCPARAM1    (RF_MC1_SLEEP|RF_MC1_BAND_400_440|RF_MC1_SUB_BAND_1st)

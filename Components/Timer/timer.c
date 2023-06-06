@@ -12,7 +12,7 @@ static volatile unsigned int    usSystemTick = 0;
 void TIM3_Init(void)
 {
    CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE); 
-   TIM3_DeInit(); 
+   TIM3_DeInit();
    //16M/128/62500 = 0.5s
    TIM3_TimeBaseInit(TIM3_Prescaler_128,TIM3_CounterMode_Up,31250);  
    TIM3_ARRPreloadConfig(ENABLE);  

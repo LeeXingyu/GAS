@@ -45,28 +45,26 @@ int main(void)
       
       /*测试打开以下两个函数*/
       //只使用了内部晶振
-      CLK_Config(CLK_SYSCLKSource_HSI);//初始化系统时钟 LSI      
+      CLK_Config(CLK_SYSCLKSource_HSI);//初始化系统时钟 HSI   4分频   4M
       HardWare_Init();      
       FirstPower_CheckService();
-      //TIM3_Init();  
+      enableInterrupts(); 
+      //TIM3_Init();       
       while(1)
-      { 
-    
-          
+      {   
+
         if(Power_CurState)
         {   
           Power_PreState = Power_CurState;
-          //不关闭定时器  2.35s定时进入          
-         //10s定时进入  以及 接收到数据进入
-          if((Rfm_Timer >= 4))
-          {  
-            
+          //不关闭定时器 9s定时进入          
+          if((Rfm_Timer >= 1))
+          {             
              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
              Timer_times = 8;
              Check_flag = 0;
              Rfm_Timer = 0; 
 
-             printf("\n times\n");
+             //printf("\n times\n");
              Rcv_MasterDataParse();                
              
              switch(D_SystemRun)
@@ -107,7 +105,12 @@ int main(void)
                     D_SystemRun = n_IDTaskSend;
                     break;
               }   
-             printf("\n Timerend \n");
+             //printf("\n Timerend \n");
+              //模块低功耗
+              SetRFMode( RF_SLEEP );
+              delay_ms(8);
+              HX712_CLK_H();
+              delay_ms(10);
              CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
          } 
 

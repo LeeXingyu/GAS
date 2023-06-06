@@ -13,7 +13,7 @@ void CLK_Config(char SYSCLKSource)
     CLK_DeInit();
     CLK_HSICmd(ENABLE);//开始内部高频RC 16M
     CLK_SYSCLKSourceSwitchCmd(ENABLE);//使能时钟切换
-    CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);//1分频，即8M
+    CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_4);//4分频，即4M
     CLK_SYSCLKSourceConfig(SYSCLKSource);//HSI为系统时钟
   while (CLK_GetSYSCLKSource() != SYSCLKSource)//等待时钟稳定
   {}

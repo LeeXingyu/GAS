@@ -153,7 +153,7 @@ static void MasterParse_Check(int c)
             }
             Awaken = 2;
         }       
-         printf("\n eCOOKER_PARSE_END end \n");
+         //printf("\n eCOOKER_PARSE_END end \n");
     }
 }
 
@@ -180,7 +180,7 @@ Rece:
               //判断是否为唤醒数据
               if(40 < RF_Pkt.key || RF_Pkt.key == 0)
               {
-                printf("\n 1\n");
+                ////printf("\n 1\n");
                 RF_Pkt.key = 1;  
                 times = 10000;
                 Updata_Normal_Config();
@@ -303,7 +303,7 @@ void Slave_Send_GasState(void)
       entity.length		= 1;
 
       Slave_Load(&entity);
-      printf("\n Slave_Send_GasState \n");
+      //printf("\n Slave_Send_GasState \n");
 }
 
 void Slave_Send_BatState(void)
@@ -315,7 +315,7 @@ void Slave_Send_BatState(void)
       entity.length		= 1;
 
       Slave_Load(&entity);
-      printf("\n Slave_Send_BatState \n");
+      //printf("\n Slave_Send_BatState \n");
 }
 
 /*
