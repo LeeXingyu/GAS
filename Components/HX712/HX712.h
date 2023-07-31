@@ -17,12 +17,16 @@
  
 #define Bat_threshold  910000    //大于910000 即电压值大于3.3
 
-#define GAS_thresholdH  14000000    //大于14000000 即高气压
-#define GAS_thresholdL  6000000    //小于13000000 即低气压
+#define GAS_thresholdH  13000000    //大于14000000 即高气压
+#define GAS_thresholdL  10000000    //小于13000000 即低气压
+//#define GAS_thresholdL  11000000    //小于13000000 即低气压
 
-#define GAS_BAT_HIGH   (0XAA)
+#define GAS_HIGH   (0XAA)
 #define GAS_NORMAL (0XCC)
-#define GAS_BAT_LOW  (0X55)
+#define GAS_LOW  (0X55)
+
+#define BAT_HIGH   (0XAA)
+#define BAT_LOW  (0X55)
 
 #define HX712_GPIO_PORT  GPIOD
 #define HX712_CLK_PINS  GPIO_Pin_3

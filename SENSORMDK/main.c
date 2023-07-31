@@ -16,12 +16,12 @@
 ============================================================================*/
 
 
-extern int  Check_flag;
 extern int Rfm_Timer;
 extern int Timer_times;
 extern unsigned short Power_PreState;
 extern unsigned short  Power_CurState;
 extern unsigned char Bat_Check_state;
+extern unsigned char  Gas_check_flag;
 extern unsigned short SlaveGasCTRL;
 uint8_t rst_data = 0;
 
@@ -55,9 +55,9 @@ int main(void)
       while(1)
       { 
           if(Power_CurState == 0)
-          {
-              RTC_Config();
+          {            
               LowPowerStart();
+              RTC_Config();
               while(Power_CurState == 0)
               {
                 Power_PreState = Power_CurState;
@@ -75,14 +75,13 @@ int main(void)
                 LowPowerStop();
                 TIM3_Init(); 
                 Rfm_Timer = 4; 
-              
               }
+              
               Power_PreState = Power_CurState;
               if((Rfm_Timer >= 4))
               {             
                  CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
                  Timer_times = 8;
-                 Check_flag = 0;
                  Rfm_Timer = 0; 
 
                  Rcv_MasterDataParse();                
@@ -95,15 +94,35 @@ int main(void)
                       Cooker_SendGas_CTRL();
                   }
                   else
-                  {    
+                  { 
+                      //未接收到关闭气阀指令 关闭气阀上报
+                      Power_PreState = Power_CurState;
+                      Power_CurState = READ_Level();        
+                      if(Power_PreState != Power_CurState  && Power_PreState == 1)
+                      {
+                         Power_PreState = Power_CurState;
+                         delay_ms(20);
+                         if(!READ_Level())
+                         {//发送关闭气阀的指令
+                            Cooker_Parse_t entity;
+                            entity.cmd	= eCOOKER_CTRL_Gas;
+                            entity.payload[0]	= COOKER_PARSE_FALSE;
+                            entity.length		= 1;
+                            Slave_Load(&entity);             
+                         }
+                      }
+                    //未关闭气阀  检测气体
+                    if(Gas_check_flag == 0 && Power_CurState == 1)
+                    {
                       //发送气体
                       Slave_Send_GasState();
                       //发送电池
-                      if(Bat_Check_state == GAS_BAT_LOW)
+                      if(Bat_Check_state == BAT_LOW)
                       {
                         delay_ms(500);
                         Slave_Send_BatState();
                       }
+                    }
                   }
                 
                   SetRFMode( RF_SLEEP );

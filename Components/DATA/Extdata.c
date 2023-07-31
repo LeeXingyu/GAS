@@ -94,12 +94,12 @@ void Cooker_SendGas_CTRL(void)
 
     SlaveGasCTRL = 0;
     //关闭气阀
-    QA_PowerL();//关闭电磁阀
-    delay_ms(100);
+   // QA_PowerL();//关闭电磁阀
+    //delay_ms(100);
     QA_PowerH();//关闭电磁阀
-    delay_ms(5000);
-    QA_PowerL();//关闭电磁阀
-    delay_ms(200);
+    delay_ms(8000);
+    //QA_PowerL();//关闭电磁阀
+    //delay_ms(200);
     if(!READ_Level())
     {
        delay_ms(20);

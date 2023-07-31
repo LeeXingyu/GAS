@@ -105,11 +105,11 @@ unsigned char tx_ReadCount(void)
     Count = ReadCount();
     if(Count >= GAS_thresholdH )
     {
-      return GAS_BAT_HIGH;
+      return GAS_HIGH;
     } 
     else if(Count <= GAS_thresholdL)
     {   
-      return GAS_BAT_LOW;
+      return GAS_LOW;
     } 
     else 
     {
@@ -126,9 +126,9 @@ unsigned char tx_ReadVoltage(void)
     //Bat_Vol = (float)(((uint32_t)CountVol)/8388607*(3.3/2)/3.2*(56+3.2));
     if(CountVol <= Bat_threshold)
     {
-       return GAS_BAT_LOW;
+       return BAT_LOW;
     } 
-    else  return GAS_BAT_HIGH;
+    else  return BAT_HIGH;
 }
 
 
