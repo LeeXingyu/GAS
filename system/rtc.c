@@ -13,7 +13,7 @@ void CLK_Config(char SYSCLKSource)
     CLK_DeInit();
     CLK_HSICmd(ENABLE);//开始内部高频RC 16M
     CLK_SYSCLKSourceSwitchCmd(ENABLE);//使能时钟切换
-    CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_4);//4分频，即4M
+    CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);//4分频，即4M
     CLK_SYSCLKSourceConfig(SYSCLKSource);//HSI为系统时钟
   while (CLK_GetSYSCLKSource() != SYSCLKSource)//等待时钟稳定
   {}
@@ -47,19 +47,18 @@ void RTC_Config(void)
 {
   
   
-        CLK_LSICmd(ENABLE);//使能LSI
-        CLK_RTCClockConfig(CLK_RTCCLKSource_LSI, CLK_RTCCLKDiv_2);//38K
+        CLK_LSICmd(ENABLE);//使能HSI
+        CLK_RTCClockConfig(CLK_RTCCLKSource_LSI, CLK_RTCCLKDiv_4);//38khz
        
-        while (CLK_GetFlagStatus(CLK_FLAG_LSIRDY) == RESET);
+        while (CLK_GetFlagStatus(CLK_FLAG_HSIRDY) == RESET);
         
         RTC_WakeUpCmd(DISABLE);
         
         CLK_PeripheralClockConfig(CLK_Peripheral_RTC, ENABLE);//RTC时钟门控使能
-        RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);//38K/16/2=2375HZ t=0.842Ms
-        delay_ms(500);//延时
+        RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);//38K/16/1=2375HZ t=0.421Ms
     
         RTC_ITConfig(RTC_IT_WUT, ENABLE);//唤醒定时器中断使能      
-        RTC_SetWakeUpCounter(11876);//设置唤醒时间10s 11876*(1/(38K/16/2)
+        RTC_SetWakeUpCounter(35629);//设置唤醒时间60s
         RTC_WakeUpCmd(ENABLE);//RTC唤醒使能
         
         enableInterrupts();

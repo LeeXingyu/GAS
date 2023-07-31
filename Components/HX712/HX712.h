@@ -18,7 +18,7 @@
 #define Bat_threshold  910000    //大于910000 即电压值大于3.3
 
 #define GAS_thresholdH  14000000    //大于14000000 即高气压
-#define GAS_thresholdL  13000000    //小于13000000 即低气压
+#define GAS_thresholdL  6000000    //小于13000000 即低气压
 
 #define GAS_BAT_HIGH   (0XAA)
 #define GAS_NORMAL (0XCC)

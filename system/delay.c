@@ -52,7 +52,7 @@ void delay_ms(u16 nCount)
 //4MHz£¬´ó¸Å1ms
     unsigned int i;
     while(nCount--)  
-    for(i=95;i>0;i--)
+    for(i=530;i>0;i--)
     delay_us(1);
 }
 /*******************************************************************************

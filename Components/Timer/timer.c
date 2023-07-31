@@ -37,6 +37,7 @@ void TIM3_Handle(void)
     Check_flag++;
     Timer_times = 8;    
     usSystemTick++;
+    //printf(" 2 0 0\n");
   }
 }
 

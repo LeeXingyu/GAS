@@ -27,7 +27,7 @@
 #include "activehalt.h"
 #include "timer.h"
 #include "ETC.h"
-    
+ #include "USART.h"   
 unsigned short  Power_CurState = 0;
 unsigned short  Power_PreState = 0;
 unsigned int  BatCheck_Flag = 0;
@@ -117,14 +117,10 @@ INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler,4)
     */
     
   RTC_WakeUpCmd(DISABLE);
- 
-// SX1212_SEND();
-//   Function = 1;
-// Active_Halt_Colse();//关闭串口，SPI,DMA时钟
-// GPIO_Init_Colse();  //关闭GPIO
-
   RTC_ClearITPendingBit(RTC_IT_WUT); 
-  RTC_WakeUpCmd(ENABLE);
+  Power_CurState = READ_Level();
+  //printf(" 100 0 0\n");
+ // RTC_WakeUpCmd(ENABLE);
  
 }
 /**
@@ -186,20 +182,7 @@ INTERRUPT_HANDLER(EXTI1_IRQHandler,9)
   
   //QA_PowerL();
   //delay_ms(3000);
- 
-  if(READ_Level())
-  {
-    delay_ms(20);
-    if(READ_Level())
-    {
-      // 气体阀打开
-      Power_CurState = 1;
-      BatCheck_Flag++;
-    }
-    else Power_CurState = 0;
-  }
-  else Power_CurState = 0;
-  EXTI_ClearITPendingBit(EXTI_IT_Pin1); 
+
     /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>3262027235</Checksum>
+        <Checksum>3802647379</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>1</FillEnabled>
@@ -40,7 +40,8 @@
     </TermIOLog>
     <Breakpoints>
         <Bp0>_ "STD_DATA" "read_IRQ_0" 0 0 0 3 0 "" 0 ""</Bp0>
-        <Count>1</Count>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\Components\DATA\Extdata.c}.103.9" 1 0 0 0 "" 0 ""</Bp1>
+        <Count>2</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>

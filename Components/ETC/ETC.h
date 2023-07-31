@@ -16,7 +16,8 @@
 #define TEV_READ_PINS  GPIO_Pin_1
 #define EXTI_TEV_READ_PINS EXTI_Pin_1
 #define TEV_CTRL_PINS  GPIO_Pin_0
-
+#define FPower_PORT  GPIOA
+#define FPower_PINS  GPIO_Pin_4
 
 #define QA_PowerH()   GPIO_SetBits(TEV_GPIO_PORT,TEV_CTRL_PINS)// 信号为高电平
 #define QA_PowerL()   GPIO_ResetBits(TEV_GPIO_PORT,TEV_CTRL_PINS)// 信号为高电平

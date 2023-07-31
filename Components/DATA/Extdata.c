@@ -1,6 +1,7 @@
 #include "Extdata.h"
 
-
+extern unsigned short Power_PreState;
+extern unsigned short  Power_CurState;
 unsigned short SlaveSendSetIdResult = 0;
 unsigned short SlaveGasCTRL = 0;
 static unsigned char Slave_BackupId[FlASH_OPER_SIZE];
@@ -90,13 +91,15 @@ void Cooker_SendSetIdResult(void)
 }
 void Cooker_SendGas_CTRL(void)
 {
-  if(1 == SlaveGasCTRL)
-  {
+
     SlaveGasCTRL = 0;
     //关闭气阀
+    QA_PowerL();//关闭电磁阀
+    delay_ms(100);
     QA_PowerH();//关闭电磁阀
-    //delay_ms(100);
-    //QA_PowerL();//关闭电磁阀
+    delay_ms(5000);
+    QA_PowerL();//关闭电磁阀
+    delay_ms(200);
     if(!READ_Level())
     {
        delay_ms(20);
@@ -106,10 +109,11 @@ void Cooker_SendGas_CTRL(void)
         entity.cmd	= eCOOKER_CTRL_Gas;
         entity.payload[0]	= COOKER_PARSE_FALSE;
         entity.length		= 1;
-        Slave_Load(&entity);             
+        Slave_Load(&entity);      
+        Power_CurState = READ_Level();
+        Power_PreState = READ_Level();
        }
     }
-    printf("\n Cooker_SendGas_CTRL \n");
-  }
+    //printf("\n Cooker_SendGas_CTRL \n");
 }
 
