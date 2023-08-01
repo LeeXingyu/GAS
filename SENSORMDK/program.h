@@ -28,5 +28,5 @@ void LowPowerStart(void);
 void LowPowerStop(void);
 void Slave_Service(void);
 void FirstPower_CheckService(void);
-
+void Slave_GasBat_SendService(void);
 #endif

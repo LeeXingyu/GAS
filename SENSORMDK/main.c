@@ -18,10 +18,13 @@
 
 extern int Rfm_Timer;
 extern int Timer_times;
+
 extern unsigned short Power_PreState;
 extern unsigned short  Power_CurState;
+
 extern unsigned char Bat_Check_state;
 extern unsigned char  Gas_check_flag;
+
 extern unsigned short SlaveGasCTRL;
 uint8_t rst_data = 0;
 
@@ -54,21 +57,27 @@ int main(void)
       
       while(1)
       { 
-          if(Power_CurState == 0)
-          {            
-              LowPowerStart();
-              RTC_Config();
-              while(Power_CurState == 0)
-              {
-                Power_PreState = Power_CurState;
-                RTC_WakeUpCmd(ENABLE);
-                enableInterrupts(); //开启总中断  
-                PWR_UltraLowPowerCmd(ENABLE);//超低功耗
-                halt();
-                Power_PreState = 0;
-              }
+        switch(Power_CurState)
+        {
+          case 0 :
+          {
+            if(Power_CurState == 0)
+            {            
+                LowPowerStart();
+                RTC_Config();
+                while(Power_CurState == 0)
+                {
+                  Power_PreState = Power_CurState;
+                  RTC_WakeUpCmd(ENABLE);
+                  enableInterrupts(); //开启总中断  
+                  PWR_UltraLowPowerCmd(ENABLE);//超低功耗
+                  halt();
+                  Power_PreState = 0;
+                }
+            }
           }
-          else
+          break;
+          case 1:
           {
               if(Power_PreState != Power_CurState)
               {
@@ -80,13 +89,13 @@ int main(void)
               Power_PreState = Power_CurState;
               if((Rfm_Timer >= 4))
               {             
-                 CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
-                 Timer_times = 8;
-                 Rfm_Timer = 0; 
+                  CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,DISABLE);
+                  Timer_times = 8;
+                  Rfm_Timer = 0; 
 
-                 Rcv_MasterDataParse();                
-                 //检测服务
-                 Slave_Service(); 
+                  Rcv_MasterDataParse();                
+                  //检测服务
+                  Slave_Service(); 
                   
                   if(SlaveGasCTRL == 1)
                   {
@@ -111,18 +120,11 @@ int main(void)
                             Slave_Load(&entity);             
                          }
                       }
-                    //未关闭气阀  检测气体
-                    if(Gas_check_flag == 0 && Power_CurState == 1)
-                    {
-                      //发送气体
-                      Slave_Send_GasState();
-                      //发送电池
-                      if(Bat_Check_state == BAT_LOW)
+                      //未关闭气阀  发送气体电池信息
+                      if(Gas_check_flag == 0 && Power_CurState == 1)
                       {
-                        delay_ms(500);
-                        Slave_Send_BatState();
+                        Slave_GasBat_SendService();
                       }
-                    }
                   }
                 
                   SetRFMode( RF_SLEEP );
@@ -131,7 +133,10 @@ int main(void)
                   delay_ms(10);
                   CLK_PeripheralClockConfig(CLK_Peripheral_TIM3,ENABLE);
                }
-           }        
+           }  
+          break;
+        default:break;
+        }
      }  
 }
 

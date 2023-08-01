@@ -239,8 +239,6 @@ void Master_data_Prase(int c)
     usCooker_ParseCheck = crc16_ccitt_byte(usCooker_ParseCheck, c);
 
     a_pfnCooker_Parse[mPARSE_State](c);
-
-    
 }
 
 void GetMasterId(unsigned char *id)
@@ -290,7 +288,6 @@ void Slave_WirelessSendLoad(char *load, unsigned int len)
 	if (BuildPacket((unsigned char *)load, len))
 		SendRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt));
     
-
 }
 
 void Slave_Send_GasState(void)

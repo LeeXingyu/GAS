@@ -43,6 +43,8 @@ static void Bat_Check(void)
         }
 }
 
+
+
 //固件初始化
 void HardWare_Init(void)
 {
@@ -50,14 +52,14 @@ void HardWare_Init(void)
  //     Usart_Init();//初始化串口  
  //     Usart1_clear_init();//串口BUF初始化 
 
-      TEV_GPIO_INIT();//初始化电磁阀检测和开关  
-      TEV_CTRL_INIT();
+     TEV_GPIO_INIT();//初始化电磁阀检测和开关  
+     TEV_CTRL_INIT();
       
-      HX712_GPIO_INIT();//hx712&ADC GPIO_init
-      HX712_CLK_H();
-      delay_ms(1);
+     HX712_GPIO_INIT();//hx712&ADC GPIO_init
+     HX712_CLK_H();
+     delay_ms(1);
 
-      GPIO_Initial();//SPI_GPIO_INIT       
+     GPIO_Initial();//SPI_GPIO_INIT       
 
       //RFM64
      InitSX1212();
@@ -70,24 +72,22 @@ void FirstPower_CheckService(void)
 {
     unsigned char id[FlASH_OPER_SIZE] = {0};
     memset(id,0,FlASH_OPER_SIZE);
-    long int timeout = 120000;       
-    //对码   
-    GetMasterId(id);
-    if(id[0] == 0 && id[1] == 0 && id[2] == 0)
+    long int timeout = 60000;       
+
+     //1分钟内进行对码   
+    CheckID = 0;
+    while((0 != timeout )&&(!SlaveSendSetIdResult))
     {
-    //对码   
-      CheckID = 0;
-      while((0 != timeout )&&(!SlaveSendSetIdResult))
-      {
-        Rcv_MasterDataParse();
-        timeout--;
-        delay_ms(1);    
-      }
+      Rcv_MasterDataParse();
+      timeout--;
+      delay_ms(1);    
+    }
+    if(SlaveSendSetIdResult)
+    {
       Cooker_SendSetIdResult();
     }
-    
-      CheckID = 1;
-      delay_ms(10);
+    CheckID = 1;
+    delay_ms(10);
 }
 
 //开启低功耗
@@ -136,5 +136,21 @@ void Slave_Service(void)
       Gas_check_Times--;
       if(Gas_check_Times <= 0)
         Gas_check_Times = 0;
+    }
+}
+
+void Slave_GasBat_SendService(void)
+{
+    //发送气体
+    if(Gas_Pressure_state == GAS_HIGH)
+    {
+      delay_ms(100);
+      Slave_Send_GasState();
+    }
+    //发送电池
+    if(Bat_Check_state == BAT_LOW)
+    {
+      delay_ms(200);
+      Slave_Send_BatState();
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>2370641918</Checksum>
+        <Checksum>3059392504</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>1</FillEnabled>
@@ -29,12 +29,6 @@
         <GraphEnabled>0</GraphEnabled>
         <ShowTimeLog>1</ShowTimeLog>
     </DataSample>
-    <Breakpoints>
-        <Bp0>_ "STD_DATA" "read_IRQ_0" 0 0 0 3 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\Components\DATA\Extdata.c}.103.9" 1 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\main.c}.103.26" 1 0 0 0 "" 0 ""</Bp2>
-        <Count>3</Count>
-    </Breakpoints>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -44,6 +38,10 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
+    <Breakpoints>
+        <Bp0>_ "STD_DATA" "read_IRQ_0" 0 0 0 3 0 "" 0 ""</Bp0>
+        <Count>1</Count>
+    </Breakpoints>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>
