@@ -1155,7 +1155,7 @@
                     <item>( * ( u16* )( 0x0050B1 )</item>
                     <item>( * ( u16* )( 0x0050B1 ) )</item>
                     <item>pBuffer</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
@@ -1250,7 +1250,7 @@
                     <item>pBuffer</item>
                     <item>Slave_BackupId</item>
                     <item>(id_check[COOKER_PARSE_ADDR_LEN - 1] == Slave_BackupId[COOKER_PARSE_ADDR_LEN - 1])</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

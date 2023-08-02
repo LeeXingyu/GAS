@@ -243,7 +243,7 @@ void Master_data_Prase(int c)
 
 void GetMasterId(unsigned char *id)
 {
-  FLASH_ReadNByte((unsigned char *)id,PARA_START_INDEX,FlASH_OPER_SIZE);
+  FLASH_ReadNByte((unsigned char *)id,PARA_START_INDEX,COOKER_PARSE_ADDR_LEN);
 }
 
 unsigned int Slave_Load(Cooker_Parse_t *entity)

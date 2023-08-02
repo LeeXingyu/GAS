@@ -72,20 +72,24 @@ void FirstPower_CheckService(void)
 {
     unsigned char id[FlASH_OPER_SIZE] = {0};
     memset(id,0,FlASH_OPER_SIZE);
-    long int timeout = 60000;       
+    long int timeout = 108;  
+    SlaveSendSetIdResult = 0;
 
      //1分钟内进行对码   
     CheckID = 0;
+    //接近0.56s一个循环  定时需要计算
     while((0 != timeout )&&(!SlaveSendSetIdResult))
     {
       Rcv_MasterDataParse();
+      //通信内部自带400多ms的超时判定
       timeout--;
-      delay_ms(1);    
+      delay_ms(1);  
     }
     if(SlaveSendSetIdResult)
     {
       Cooker_SendSetIdResult();
     }
+    SlaveSendSetIdResult = 1;
     CheckID = 1;
     delay_ms(10);
 }
