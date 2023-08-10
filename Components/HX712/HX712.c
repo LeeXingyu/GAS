@@ -124,11 +124,15 @@ unsigned char tx_ReadVoltage(void)
     CountVol = ReadVoltage();
     //小于3.3V的ad值时发送数据
     //Bat_Vol = (float)(((uint32_t)CountVol)/8388607*(3.3/2)/3.2*(56+3.2));
-    if(CountVol <= Bat_threshold)
+    if(CountVol <= Bat_thresholdL)
     {
        return BAT_LOW;
     } 
-    else  return BAT_HIGH;
+    else if(CountVol <= Bat_thresholdH)  
+    {
+      return BAT_NORMAL;
+    }
+    else return BAT_HIGH;
 }
 
 

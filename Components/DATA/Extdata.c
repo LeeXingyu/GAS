@@ -75,7 +75,7 @@ void Cooker_AFN_Handle(Cooker_Parse_t *entity)
         }
         break;
 
-        default:SlaveGasCTRL = 1;
+        default://SlaveGasCTRL = 1;
             break;
     }
 }
@@ -99,15 +99,14 @@ void Cooker_SendSetIdResult(void)
 }
 void Cooker_SendGas_CTRL(void)
 {
-
-    SlaveGasCTRL = 0;
-    //关闭气阀
-   // QA_PowerL();//关闭电磁阀
-    //delay_ms(100);
-    QA_PowerH();//关闭电磁阀
-    delay_ms(5000);
-    QA_PowerL();//关闭电磁阀
-    delay_ms(100);
+    if(READ_Level())
+    {
+      //关闭气阀
+      QA_PowerH();//关闭电磁阀
+      delay_ms(1500);
+      QA_PowerL();//关闭电磁阀
+      delay_ms(100);
+    }
     if(!READ_Level())
     {
        delay_ms(20);
@@ -122,6 +121,7 @@ void Cooker_SendGas_CTRL(void)
         Power_PreState = READ_Level();
        }
     }
+    
     //printf("\n Cooker_SendGas_CTRL \n");
 }
 

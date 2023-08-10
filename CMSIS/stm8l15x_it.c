@@ -31,6 +31,7 @@
 unsigned short  Power_CurState = 0;
 unsigned short  Power_PreState = 0;
 unsigned int  BatCheck_Flag = 0;
+int Sleep_times = 1;  
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -115,13 +116,16 @@ INTERRUPT_HANDLER(RTC_CSSLSE_IRQHandler,4)
     /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */
-    
-  RTC_WakeUpCmd(DISABLE);
-  RTC_ClearITPendingBit(RTC_IT_WUT); 
-  Power_CurState = READ_Level();
-  //printf(" 100 0 0\n");
- // RTC_WakeUpCmd(ENABLE);
- 
+   RTC_WakeUpCmd(DISABLE);
+   RTC_ClearITPendingBit(RTC_IT_WUT); 
+   Power_CurState = READ_Level();
+   //ÆøÌåµç´Å·§¼ì²â×´Ì¬
+   if(Power_CurState == 1)
+   {
+      Sleep_times--;
+      if(Sleep_times < 0 )
+       Sleep_times = 1;   
+   }
 }
 /**
   * @brief External IT PORTE/F and PVD Interrupt routine.

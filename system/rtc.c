@@ -43,7 +43,7 @@ void CLK_Config(char SYSCLKSource)
             CLK_RTCCLKDiv_64  唤醒时间为：20min---25min
 *******************************************************************************/
 
-void RTC_Config(void)
+void RTC_Config(int time)
 {
   
   
@@ -58,7 +58,7 @@ void RTC_Config(void)
         RTC_WakeUpClockConfig(RTC_WakeUpClock_RTCCLK_Div16);//38K/16/1=2375HZ t=0.421Ms
     
         RTC_ITConfig(RTC_IT_WUT, ENABLE);//唤醒定时器中断使能      
-        RTC_SetWakeUpCounter(35629);//设置唤醒时间60s
+        RTC_SetWakeUpCounter(time);//设置35469唤醒时间60s  5940定时10s
         RTC_WakeUpCmd(ENABLE);//RTC唤醒使能
         
         enableInterrupts();

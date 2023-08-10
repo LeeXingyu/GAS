@@ -161,7 +161,7 @@ void Rcv_MasterDataParse(void)
 {
 	unsigned char rc = ERROR;
 	unsigned int count;
-        unsigned int times = 400;
+        unsigned int times = 50;
         //CheckID = 1;//关闭对码时打开
         if(CheckID)
         {

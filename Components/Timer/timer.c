@@ -1,6 +1,5 @@
 #include "timer.h"
 
-int Timer_times = 8;  //0.25*4
 int Rfm_Timer = 0;
 static volatile unsigned int    usSystemTick = 0;
 /*********************************************************
@@ -26,17 +25,7 @@ void TIM3_Init(void)
 **********************************************************/
 void TIM3_Handle(void)
 {
-  if(Timer_times != 0)
-  {
-    Timer_times-- ;
-  }
-  else 
-  {
-    Rfm_Timer++;
-    Timer_times = 8;    
-    usSystemTick++;
-    //printf(" 2 0 0\n");
-  }
+
 }
 
 uint16_t Cooker_TimeGet(void)

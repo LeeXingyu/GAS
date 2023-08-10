@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>1363424042</Checksum>
+        <Checksum>4027809549</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>1</FillEnabled>
@@ -31,8 +31,8 @@
     </DataSample>
     <Breakpoints>
         <Bp0>_ "STD_DATA" "read_IRQ_0" 0 0 0 3 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\program.c}.75.14" 1 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\program.c}.91.5" 1 0 0 0 "" 0 ""</Bp2>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\Components\DATA\Extdata.c}.107.7" 1 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\program.c}.160.7" 1 0 0 0 "" 0 ""</Bp2>
         <Count>3</Count>
     </Breakpoints>
     <LogFile>
