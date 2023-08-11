@@ -87,7 +87,7 @@ int main(void)
         if(fun_status.Slave_Check == 0)
         {
                 LowPowerStart();                
-      //  Sleep:   
+        Sleep:   
                 Power_PreState = Power_CurState;
                 RTC_WakeUpCmd(ENABLE);
                 enableInterrupts(); //开启总中断  
@@ -103,12 +103,12 @@ int main(void)
 
                 }
                 
-                // if(Power_CurState == 0)
-               //  { 
+                 if(Power_CurState == 0)
+                { 
                   //未打开开关，执行sleep
-               //    goto Sleep; 
+                   goto Sleep; 
                   
-               // }            
+                }            
         }
         
         //需发送数据时  执行工作函数
@@ -172,14 +172,14 @@ int main(void)
                 //对应阀门状态，初始值状态变化
                 if(!READ_Level())
                 {
-                  if(Gas_Check_Prestate == 0xAA)
-                  {
-                    RTC_Config((((uint16_t)time5s)*2)); 
-                  }
-                  else
-                  {
+//                  if(Gas_Check_Prestate == 0xAA)
+//                  {
+//                    RTC_Config((((uint16_t)time5s)*2)); 
+//                  }
+//                  else
+//                  {
                     RTC_Config((uint16_t)time60s);                    
-                  } 
+//                  } 
                   Sleep_times = 1;
                   Bat_CtrlValve = 144;
                 }
