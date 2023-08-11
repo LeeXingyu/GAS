@@ -3,7 +3,7 @@
 extern int Sleep_times;
 INT8U Gas_check_Times = 0;
 unsigned char  Gas_check_flag = 1;
-
+extern int Bat_Checktimes;
 extern unsigned char Gas_Pressure_state ;
 extern unsigned char Bat_Check_state;
 unsigned char Bat_Check_Prestate = 0;
@@ -14,6 +14,7 @@ extern unsigned short  Power_CurState;
 extern unsigned short SlaveGasCTRL ;
 extern unsigned short SlaveSendSetIdResult;
 extern unsigned char  CheckID;
+extern unsigned char GasValue_Charge;
 //待机模式 功能实现
 static void Gas_Check(void)
 {    
@@ -21,13 +22,13 @@ static void Gas_Check(void)
     HX712_CLK_L();
     delay_ms(10);
     HX712_Init_Mode(ReadCount_Mode);
-    delay_ms(100);
+    delay_ms(50);
     //检测是否有气压 低气压 60s一次 5s进入一次 进入12次即可
     switch(tx_ReadCount())
     {
           case GAS_LOW:Sleep_times = 12;Gas_Pressure_state = GAS_LOW;Gas_check_flag = 0;break;
           case GAS_HIGH:Sleep_times = 2;Gas_Pressure_state = GAS_HIGH;Gas_check_flag = 0;break;
-          case GAS_NORMAL:Sleep_times = 2;Gas_Pressure_state = GAS_HIGH;Gas_check_flag = 0; break;
+          case GAS_NORMAL:Sleep_times = 2;Gas_Pressure_state = GAS_NORMAL;Gas_check_flag = 0; break;
           default:Sleep_times = 2;Gas_Pressure_state = 0;break;
     }
 }
@@ -37,13 +38,13 @@ static void Bat_Check(void)
         HX712_CLK_L();
         delay_ms(10);
         HX712_Init_Mode(ReadVoltage_Mode);
-        delay_ms(100);
+        delay_ms(50);
         //检测电池  
         switch(tx_ReadVoltage())
         {
-              case BAT_LOW:Bat_Check_state =  BAT_LOW;SlaveGasCTRL = 1;break;
-              case BAT_NORMAL:Bat_Check_state =  BAT_LOW;break;
-              case BAT_HIGH:Bat_Check_state = BAT_HIGH;break;        
+              case BAT_LOW:Bat_Check_state =  BAT_LOW;SlaveGasCTRL = 1;GasValue_Charge = 1;break;
+              case BAT_NORMAL:Bat_Check_state =  BAT_LOW;GasValue_Charge = 0;break;
+              case BAT_HIGH:Bat_Check_state = BAT_HIGH;GasValue_Charge = 0;break;        
               default:Bat_Check_state = 0;break;
         }
 }
@@ -159,25 +160,30 @@ void Slave_Service(void)
 {
         Gas_Check();  
         delay_ms(20);
-        Bat_Check();
+        if(Bat_Checktimes == 0)
+        {
+                Bat_Checktimes = 6900;
+                Bat_Check();
+                delay_ms(20);
+        }
+        HX712_CLK_H();
         delay_ms(20);
 }
 
 void Slave_GasBat_SendService(void)
 {
-  int send_time;
-  unsigned char gas_acktimes = 5;
-  unsigned char bat_acktimes = 5;
+    int send_time;
+    unsigned char gas_acktimes = 5;
+    unsigned char bat_acktimes = 5;
     //发送气体
-    if(Gas_Check_Prestate != Gas_Pressure_state )
+    if(GAS_HIGH == Gas_Pressure_state )
     {
       Gas_Check_Prestate = Gas_Pressure_state;
       delay_ms(20);
-      Slave_Send_GasState();
-      
+          
       send_gasdata:
           send_time = 500;
-          Slave_Send_BatState();
+          Slave_Send_GasState();
           do
           {       
               Rcv_MasterAck();
@@ -204,7 +210,6 @@ void Slave_GasBat_SendService(void)
     {
       Bat_Check_Prestate = Bat_Check_state;
       delay_ms(20);
-      Slave_Send_BatState();
       
  send_batdata:
           send_time = 500;
@@ -235,5 +240,5 @@ void Shutdown_GasSend(void)
 {
       Gas_Pressure_state = 0x55;
       Gas_Check_Prestate = Gas_Pressure_state;
-      delay_ms(200);
+      delay_ms(3);
 }

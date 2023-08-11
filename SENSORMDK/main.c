@@ -27,7 +27,10 @@ extern unsigned char Gas_Pressure_state ;
 extern unsigned char Gas_Check_Prestate ;
 
 extern unsigned short SlaveGasCTRL;
+
 uint8_t rst_data = 0;
+int Bat_CtrlValve = 144;
+unsigned char GasValue_Charge;
 
 enum
 {
@@ -64,6 +67,8 @@ int main(void)
       HardWare_Init(); 
       //第一次上电对码 以及 气体检测服务
       FirstPower_CheckService();
+      HX712_CLK_H();
+      delay_ms(20);
       Power_PreState = 0;
       Power_CurState = READ_Level();
       
@@ -82,7 +87,7 @@ int main(void)
         if(fun_status.Slave_Check == 0)
         {
                 LowPowerStart();                
-        Sleep:   
+      //  Sleep:   
                 Power_PreState = Power_CurState;
                 RTC_WakeUpCmd(ENABLE);
                 enableInterrupts(); //开启总中断  
@@ -93,16 +98,17 @@ int main(void)
                 if(Power_PreState != Power_CurState  && Power_PreState == 1)
                 {
                   fun_status.Value_status = 1;
+                  Sleep_times = 0;
                   goto SendingRecv_data;
 
                 }
                 
-                if(Power_CurState == 0)
-                { 
+                // if(Power_CurState == 0)
+               //  { 
                   //未打开开关，执行sleep
-                  goto Sleep; 
+               //    goto Sleep; 
                   
-                }            
+               // }            
         }
         
         //需发送数据时  执行工作函数
@@ -119,57 +125,76 @@ int main(void)
                    } 
                    RTC_Config((uint16_t)time5s);
                 }
-               
                 RTC_WakeUpCmd(DISABLE);                      
                 Power_PreState = Power_CurState;
+                
                 //接收函数
-                Rcv_MasterDataParse();                
+                Rcv_MasterDataParse();   
+                
                 //检测服务
                 if(Sleep_times == 0)
                 {          
                   Slave_Service(); 
                   fun_status.GasBat_status = 1;
                 }
+                
                 //控制气体阀门关闭 信息上报
                 if(SlaveGasCTRL == 1)
                 {                
-                    Cooker_SendGas_CTRL();         
-                    if(Power_CurState == 0)
-                    {
-                          Shutdown_GasSend();
-                          //开启RTC时钟
-                          RTC_Config((uint16_t)time60s);
-                    } 
-                    SlaveGasCTRL = 0;    
+                    Cooker_SendGas_CTRL(); 
+                     if(!READ_Level())
+                     {
+                        SlaveGasCTRL = 0; 
+                     }
                 }
                 else
                 { 
                     //气阀手动关闭进行上报    
-                    if(fun_status.Value_status == 1 || !READ_Level())
+                    if(fun_status.Value_status == 1)
                     {
                        delay_ms(20);                      
                        Sleep_times = 1;
                        if(!READ_Level())
                        {//发送关闭气阀的指令
                          Slave_Send_GasCtrl(COOKER_PARSE_FALSE);
-                       } 
-                      if(!READ_Level())
-                      {
-                          Shutdown_GasSend();
-                          //开启RTC时钟
-                          RTC_Config((uint16_t)time60s);
-                      } 
-                      fun_status.Value_status = 0;
+                         fun_status.Value_status = 0;
+                       }  
                     }                  
                 }
                
                 //未关闭气阀  发送气体电池信息
-                if((fun_status.GasBat_status == 1) && (Power_CurState == 1))
+                if(fun_status.GasBat_status == 1)
                 {
                   Slave_GasBat_SendService();
                   fun_status.GasBat_status = 0;
                 }
-
+                
+                //对应阀门状态，初始值状态变化
+                if(!READ_Level())
+                {
+                  if(Gas_Check_Prestate == 0xAA)
+                  {
+                    RTC_Config((((uint16_t)time5s)*2)); 
+                  }
+                  else
+                  {
+                    RTC_Config((uint16_t)time60s);                    
+                  } 
+                  Sleep_times = 1;
+                  Bat_CtrlValve = 144;
+                }
+                else
+                {
+                  if(GasValue_Charge == 1)
+                  {
+                    Bat_CtrlValve--;
+                    if(Bat_CtrlValve == 0)
+                    {
+                      SlaveGasCTRL = 1;
+                    }
+                  }              
+                }
+                
                 fun_status.Slave_Check = 0;
       }
 }
