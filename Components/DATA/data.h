@@ -32,6 +32,7 @@
 
 #define COOKER_PARSE_TRUE				(0xAA)
 #define COOKER_PARSE_FALSE				(0x55)
+#define COOKER_PARSE_OK                                 (0x11)
 
 typedef struct tag_data{
 
@@ -64,6 +65,8 @@ typedef enum _Cooker_Cmd_e
 }Cooker_Cmd_e;
 
 void Rcv_MasterDataParse(void);
+void Rcv_MasterAck(void);
+
 void Master_data_Prase(int c);
 void GetMasterId(unsigned char *id);
 
@@ -72,6 +75,7 @@ void Slave_WirelessSendLoad(char *load, unsigned int len);
 //发送数据
 void Slave_Send_GasState(void);
 void Slave_Send_BatState(void);
+void Slave_Send_GasCtrl(unsigned char State);
 //实现主机要求的功能函数
 void Cooker_AFN_Handle(Cooker_Parse_t *entity);
 

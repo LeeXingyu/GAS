@@ -13,6 +13,15 @@
 #define FlASH_OPER_SIZE     (COOKER_PARSE_ADDR_LEN + 20)
 #define PARA_START_INDEX    0x1011
 
+
+struct Sx1212_Ack
+{
+  unsigned char Gas_Ack;    //ÆøÌå¼ì²â×´Ì¬
+  unsigned char Bat_Ack;
+  unsigned char CtrlGas_Ack;
+};
+extern struct Sx1212_Ack Master_Ack;
+
 void FLASH_ReadNByte(unsigned char* pBuffer, uint32_t ReadAddr, uint8_t nByte);
 void FLASH_WriteNByte(uint8_t* pBuffer, uint32_t WriteAddr, uint8_t nByte);
 void Cooker_SendSetIdResult(void);

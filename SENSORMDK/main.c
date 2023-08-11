@@ -64,7 +64,6 @@ int main(void)
       HardWare_Init(); 
       //第一次上电对码 以及 气体检测服务
       FirstPower_CheckService();
-      Sleep_times = 1;
       Power_PreState = 0;
       Power_CurState = READ_Level();
       
@@ -116,11 +115,7 @@ int main(void)
                    Sleep_times = 0;
                    if(Power_CurState == 1)
                    {//发送关闭气阀的指令
-                      Cooker_Parse_t entity;
-                      entity.cmd	= eCOOKER_CTRL_Gas;
-                      entity.payload[0]	= COOKER_PARSE_TRUE;
-                      entity.length		= 1;
-                      Slave_Load(&entity);             
+                       Slave_Send_GasCtrl(COOKER_PARSE_TRUE);                                                 
                    } 
                    RTC_Config((uint16_t)time5s);
                 }
@@ -138,8 +133,7 @@ int main(void)
                 //控制气体阀门关闭 信息上报
                 if(SlaveGasCTRL == 1)
                 {                
-                    Cooker_SendGas_CTRL();
-                    //Power_CurState = READ_Level();
+                    Cooker_SendGas_CTRL();         
                     if(Power_CurState == 0)
                     {
                           Shutdown_GasSend();
@@ -157,11 +151,7 @@ int main(void)
                        Sleep_times = 1;
                        if(!READ_Level())
                        {//发送关闭气阀的指令
-                          Cooker_Parse_t entity;
-                          entity.cmd	= eCOOKER_CTRL_Gas;
-                          entity.payload[0]	= COOKER_PARSE_FALSE;
-                          entity.length		= 1;
-                          Slave_Load(&entity);             
+                         Slave_Send_GasCtrl(COOKER_PARSE_FALSE);
                        } 
                       if(!READ_Level())
                       {

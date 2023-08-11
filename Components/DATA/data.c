@@ -31,6 +31,7 @@ static Cooker_Parse_t	tCooker_Entity;
 static Slave_State_e	mPARSE_State = eCOOKER_PARSE_NOP;
 static unsigned int	usCooker_ParseLength= 0;
 static unsigned long int	usCooker_ParseCheck = CRC_INITIAL;
+
 unsigned char Gas_Pressure_state = 0;
 unsigned char Bat_Check_state = 0;
 unsigned char Awaken = 0;
@@ -216,6 +217,29 @@ Rece:
           }
 }
 
+
+void Rcv_MasterAck(void)
+{
+        unsigned char rc = ERROR;
+	unsigned int count;
+        memset(RF_Pkt.fill,0,40);
+        RF_Pkt.key =  0;
+        RF_Pkt.test_id =  0;
+        RF_Pkt.counter =  0;
+        usCooker_ParseCheck = CRC_INITIAL;
+        ReceiveRfFrame((unsigned char *)(&RF_Pkt), sizeof(RF_Pkt), &rc);
+        if(rc == OK)
+        {
+            count = 0;
+            while (count < RF_Pkt.key)
+            {
+                    Master_data_Prase(RF_Pkt.fill[count]);                                                
+                    count++;                                             
+            }  
+        }
+}
+
+
 void Master_data_Prase(int c)
 {
     static unsigned int delay;
@@ -292,6 +316,7 @@ void Slave_WirelessSendLoad(char *load, unsigned int len)
 
 void Slave_Send_GasState(void)
 {
+      Master_Ack.Gas_Ack = 0;
       
       Cooker_Parse_t entity;
 
@@ -303,8 +328,46 @@ void Slave_Send_GasState(void)
       //printf("\n Slave_Send_GasState \n");
 }
 
+void Slave_Send_GasCtrl(unsigned char State)
+{
+    int send_ctrltime;
+    int Ctrlack_times = 5;
+    Master_Ack.CtrlGas_Ack = 0;
+    Cooker_Parse_t entity;    
+send_ctrlata:
+    send_ctrltime = 500;
+
+    entity.cmd	        = eCOOKER_CTRL_Gas;
+    entity.payload[0]	= State;
+    entity.length	= 1;
+    Slave_Load(&entity);  
+    
+    do
+    {       
+        Rcv_MasterAck();
+        send_ctrltime--;
+        delay_ms(1);
+    }while(Master_Ack.CtrlGas_Ack== 0 && (send_ctrltime != 0));  
+    if((send_ctrltime | Master_Ack.CtrlGas_Ack) == 0)
+    {
+        Ctrlack_times--;
+        if(Ctrlack_times > 0)
+        {
+          goto send_ctrlata;
+        }
+        else
+        {
+          Ctrlack_times = 5;
+        }
+    }
+    else Master_Ack.CtrlGas_Ack = 0;  
+}
+
+
 void Slave_Send_BatState(void)
 {
+      Master_Ack.Bat_Ack = 0;
+  
       Cooker_Parse_t entity;
 
       entity.cmd	= eCOOKER_STATE_Bat;
@@ -312,7 +375,7 @@ void Slave_Send_BatState(void)
       entity.length		= 1;
 
       Slave_Load(&entity);
-      //printf("\n Slave_Send_BatState \n");
+          
 }
 
 /*

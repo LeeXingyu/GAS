@@ -7,6 +7,8 @@ unsigned short SlaveSendSetIdResult = 0;
 unsigned short SlaveGasCTRL = 0;
 static unsigned char Slave_BackupId[FlASH_OPER_SIZE];
 
+struct Sx1212_Ack Master_Ack = {0,0,0};
+
 void FLASH_WriteNByte(uint8_t* pBuffer, uint32_t WriteAddr, uint8_t nByte)
 {
     u8 i=0;  
@@ -60,23 +62,48 @@ void Cooker_AFN_Handle(Cooker_Parse_t *entity)
             }
         }
         break;
+        
         case eCOOKER_FIRE_STATE:    //气压状态
         {
             // if (1 == entity->length)
             //	bSend_FireState = TRUE;
         }
         break;
+        
         case eCOOKER_CTRL_Gas:
         {
             if ((1 == entity->length) && (COOKER_PARSE_FALSE == entity->payload[0]))
             {
               SlaveGasCTRL = 1;
             }
+            else if((1 == entity->length) && (COOKER_PARSE_OK == entity->payload[0]))
+            {
+              Master_Ack.CtrlGas_Ack = 1;
+            }
         }
         break;
-
-        default://SlaveGasCTRL = 1;
-            break;
+        
+        case eCOOKER_STATE_Gas:
+        {
+        if((1 == entity->length) && (COOKER_PARSE_OK == entity->payload[0]))
+        {
+          Master_Ack.Gas_Ack = 1;
+        }
+      
+      }
+        break;
+      
+        case eCOOKER_STATE_Bat:
+        {
+          if((1 == entity->length) && (COOKER_PARSE_OK == entity->payload[0]))
+          {
+            Master_Ack.Bat_Ack = 1;
+          }   
+        }
+         break;
+          
+         default:break; //SlaveGasCTRL = 1;
+             
     }
 }
 
@@ -103,7 +130,7 @@ void Cooker_SendGas_CTRL(void)
     {
       //关闭气阀
       QA_PowerH();//关闭电磁阀
-      delay_ms(1500);
+      delay_ms(300);
       QA_PowerL();//关闭电磁阀
       delay_ms(100);
     }
@@ -112,11 +139,7 @@ void Cooker_SendGas_CTRL(void)
        delay_ms(20);
        if(!READ_Level())
        {//发送关闭气阀的指令
-        Cooker_Parse_t entity;
-        entity.cmd	= eCOOKER_CTRL_Gas;
-        entity.payload[0]	= COOKER_PARSE_FALSE;
-        entity.length		= 1;
-        Slave_Load(&entity);      
+        Slave_Send_GasCtrl(COOKER_PARSE_FALSE);
         Power_CurState = READ_Level();
         Power_PreState = READ_Level();
        }
